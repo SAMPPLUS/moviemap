@@ -22,10 +22,8 @@
     <h1>Movie Map</h1>
   </div>
   <div id="sidebar-content">
-    <div style="">
-      <MovieDetails></MovieDetails>
-    </div>
-      <SceneSelector></SceneSelector>
+    <MovieDetails></MovieDetails>
+    <SceneSelector></SceneSelector>
   </div>
 
   
@@ -46,7 +44,7 @@
 #sidebar-content {
   display: grid;
   height: 100%;
-  grid-template-rows: auto 160px;
+  grid-template-rows: auto 140px;
   
   padding: 80px 0px 0 0px;
 }

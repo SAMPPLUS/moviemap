@@ -57,11 +57,14 @@
 
 .movie-details .header {
     text-align: left;
+    border-bottom: 1px solid;
 }
 
 .movie-details .header #title {
     max-height: 110px;
     overflow-y: hidden;
+    font-family: crimson;
+    font-weight: bold;
 }
 
 .movie-details .header #release {

@@ -7,7 +7,8 @@ import vue from '@vitejs/plugin-vue'
 export default defineConfig({
   server: {
     proxy: {
-      '/api': "http://localhost:3001"
+      '/api': "http://localhost:3001",
+      '/images': "http://localhost:3001"
     }
   },
   plugins: [
