@@ -14,12 +14,18 @@ const movieSearch = async (query_str : string, page : number) => {
     })
 }
 
-const movieGet =  async (id : string) => {
+const movieGet =  async (id : string, crew : boolean = false) => {
+    var params : any =  {
+        'language': 'en-US',
+        'api_key': process.env.TMDB_API_KEY,
+    }
+    if (crew){
+        params.append_to_response = "credits";
+    }
+    console.log(params)
+
     return axios.get(API_URL + '/movie/' + id, {
-        params: {
-            'language': 'en-US',
-            'api_key':process.env.TMDB_API_KEY
-        }
+        params: params
     })
 }
 

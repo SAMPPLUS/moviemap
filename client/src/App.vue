@@ -8,9 +8,7 @@ import Map from './components/Map.vue';
 <template>
   <header>
 
-    <div class="wrapper">
-      <Sidebar />
-    </div>
+  <Sidebar />
   </header>
 
   <main>
