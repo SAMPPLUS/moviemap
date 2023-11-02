@@ -19,14 +19,15 @@ a,
   }
 }
 
-@media (min-width: 1024px) {
   body {
     display: flex;
     place-items: center;
   }
 
   #app {
+    height: 100vh;
+    width: 100vw;
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 46% auto;
   }
-}
+

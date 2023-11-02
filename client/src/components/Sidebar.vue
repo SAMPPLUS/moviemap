@@ -18,23 +18,29 @@
 </script>
 
 <template>
-  <div class="top-bar">
-    <h1>Movie Map</h1>
-  </div>
-  <div id="sidebar-content">
-    <MovieDetails></MovieDetails>
-    <SceneSelector></SceneSelector>
+  <div class="sidebar">
+    <div class="top-bar">
+      <h1>Movie Map</h1>
+    </div>
+    <div id="sidebar-content">
+      <MovieDetails></MovieDetails>
+      <SceneSelector style="margin-top: auto;"></SceneSelector>
+    </div>
   </div>
 
   
 </template>
 
 <style scoped>
+.sidebar {
+  height: 100%
+}
 .top-bar {
   position: absolute;
   background: rgb(37, 37, 37);
+  left:0;
   height: 65px;
-  width: 50%;
+  width: 46vw;
   padding: 0 20px 0 20px;
 }
 .wrapper {
@@ -42,9 +48,10 @@
 }
 
 #sidebar-content {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
   height: 100%;
-  grid-template-rows: auto 140px;
   
   padding: 80px 0px 0 0px;
 }

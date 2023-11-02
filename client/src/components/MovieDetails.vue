@@ -14,7 +14,7 @@
     </div>
     <div class="details-container">
         <div class="movie-info">
-            <div class="header">
+            <div class="header" v-if="store.selectedFilm">
                 <h1 id="title" v-resize-text>
                     {{ store.selectedFilm?.title }}
                 </h1>

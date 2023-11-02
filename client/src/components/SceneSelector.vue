@@ -55,13 +55,19 @@ onMounted(() => {
 
 <style>
 .scene-selector {
+    max-width: 100%;
+    width: 100%;
+    padding: 10px 0 10px 0;
+
     outline: 1px solid rgb(24, 24, 24);
-    height: 100%;
+    height: 24%;
     background: rgb(0, 0, 0);
     overflow-x: scroll;
     scrollbar-color: white;
+    overflow-x: scroll;
 }
 .scroller {
+    min-width: 100%;
     height: 100%;
     background: rgb(0, 0, 0);
     display: flex;
@@ -74,9 +80,9 @@ onMounted(() => {
 }
 
 .card {
-    margin: 10px 5px 10px 5px;
-    height: 120px;
+    height: 100%;
     aspect-ratio: 16 / 9;
+    margin: 0 5px 0 5px;
     background: rgb(86, 86, 86);
     border-radius: 5px;
 }

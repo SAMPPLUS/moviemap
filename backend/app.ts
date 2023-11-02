@@ -17,7 +17,7 @@ app.use(bodyParser.urlencoded({
 
 const router = Router();
 
-app.use(express.static('static'))
+app.use(express.static('public'))
 
 router.use('/moviegeo', movieGeoRouter);
 router.use('/tmdb', TmdbRouter);
