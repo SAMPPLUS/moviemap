@@ -1,8 +1,11 @@
 <script  setup lang="ts">
+import { useMovieMapStore } from '@/stores/MovieMap.store';
 import { ref, onMounted } from 'vue';
 import type { Ref } from 'vue';
 
-const hl_img : string = "/images/spaceodyssey.jpeg";
+const store = useMovieMapStore()
+
+const hl_img : string = "/api/images/spaceodyssey.jpeg";
 
 const displayScroll = async (element : HTMLDivElement) => {
     setTimeout(function(){
@@ -11,20 +14,41 @@ const displayScroll = async (element : HTMLDivElement) => {
     } , 150);
 }
 
+const onCardClick = (index: number) =>{
+    store.setSelectedLocationIdx(index);
+}
+
+const cardRefs = ref<HTMLDivElement[]>([])
 const card1 = ref<HTMLDivElement>()
 const card2 = ref<HTMLDivElement>()
 const lastcard = ref<HTMLDivElement>()
 
+store.$onAction(
+        ({
+          name, // name of the action
+          store, // store instance, same as `someStore`
+          args, // array of parameters passed to the action
+          after, // hook after the action returns or resolves
+          onError, // hook if the action throws or rejects
+        }) => {
+
+          if(name=='setSelectedLocationIdx'){
+            if(args[0] != undefined){
+                cardRefs.value[args[0]].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'})
+            }
+            
+          }
+        })
+
 onMounted(() => {
+    /*
     if(lastcard.value){
         lastcard.value.scrollIntoView({behavior: 'instant'})
     }
     if(card1.value){
         displayScroll(card1.value);
-    }
+    }*/
     
-    
-
 })
 </script>
 
@@ -32,22 +56,10 @@ onMounted(() => {
 <div class="scene-selector">
     <div class="scroller">
         <div class="end" ></div>
-        <div class="card" ref="card1">
+        <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)">
             <img :src="hl_img" class="loc-image">
         </div>
-        <div class="card" >
-            <img :src="hl_img" class="loc-image">
-        </div><div class="card" >
-            <img :src="hl_img" class="loc-image">
-        </div><div class="card" >
-            <img :src="hl_img" class="loc-image">
-        </div><div class="card" >
-            <img :src="hl_img" class="loc-image">
-        </div><div class="card" ref="card2" >
-            <img :src="hl_img" class="loc-image">
-        </div><div class="card" ref="lastcard">
-            <img :src="hl_img" class="loc-image">
-        </div>
+        
         <div class="end"></div>
     </div>
 </div>
@@ -57,14 +69,16 @@ onMounted(() => {
 .scene-selector {
     max-width: 100%;
     width: 100%;
-    padding: 10px 0 10px 0;
-
+    padding: 15px 0 18px 0;
     outline: 1px solid rgb(24, 24, 24);
     height: 24%;
     background: rgb(0, 0, 0);
+    border-right: 2px solid black;
+    border-left: 2px solid black;
     overflow-x: scroll;
     scrollbar-color: white;
     overflow-x: scroll;
+    overflow-y: hidden;
 }
 .scroller {
     min-width: 100%;
@@ -82,9 +96,8 @@ onMounted(() => {
 .card {
     height: 100%;
     aspect-ratio: 16 / 9;
-    margin: 0 5px 0 5px;
-    background: rgb(86, 86, 86);
-    border-radius: 5px;
+    margin: 0 2% 0 2%;
+    border-radius: .5em ;
 }
 
 .card:hover {
@@ -97,6 +110,6 @@ onMounted(() => {
     height: 100%;
     object-fit: cover;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: .5em;
 }
 </style>

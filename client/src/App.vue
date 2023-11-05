@@ -1,8 +1,14 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
-import Sidebar from './components/Sidebar.vue'
+import Sidebar from './components/Sidebar/Sidebar.vue'
 import Map from './components/Map.vue';
+import { useRoute } from 'vue-router';
+import { useMovieMapStore } from './stores/MovieMap.store';
+import { onMounted } from 'vue';
+const route = useRoute();
+
+
+
+
 </script>
 
 <template>
@@ -10,7 +16,7 @@ import Map from './components/Map.vue';
     <Sidebar />
   </div>
   <div class="main-element">
-    <Map zoom="4" ></Map>
+    <Map :startzoom="3" ></Map>
   </div>
 </template>
 

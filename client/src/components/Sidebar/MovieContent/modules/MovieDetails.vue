@@ -1,32 +1,31 @@
 <script setup lang="ts">
   import { ref } from 'vue'
-  import { useMovieMapStore } from './stores/MovieMap.store'
+  import { useMovieMapStore } from '@/stores/MovieMap.store'
 
   const store = useMovieMapStore();
-
 
 </script>
 
 <template>
 <div class="movie-details">
     <div class="frame poster">
-        <img  v-bind:src="store.poster_path"> 
+        <img  v-bind:src="store.filmDetails?.poster_path"> 
     </div>
     <div class="details-container">
         <div class="movie-info">
-            <div class="header" v-if="store.selectedFilm">
-                <h1 id="title" v-resize-text>
-                    {{ store.selectedFilm?.title }}
+            <div class="header" v-if="store.filmDetails">
+                <h1 id="title" >
+                    {{ store.filmDetails?.title }}
                 </h1>
                 <div id="byline">
-                    <p id="release">{{ store.release_year }}</p>
-                    <p id="director"> Dir. {{ store.director }}</p>
+                    <p id="release">{{ store.releaseYear }}</p>
+                    <p id="director"> Dir. {{ store.filmDetails.director }}</p>
                 </div>
                 <div style="clear: both;"></div>
             </div>
 
             <div class="overview">
-                <p>{{ store.selectedFilm?.overview }}</p>
+                <p>{{ store.filmDetails?.overview }}</p>
             </div>
         </div>     
     </div>
@@ -86,4 +85,4 @@
 .frame img {
   width: 100%;
 }
-</style>
+</style>../assets/stores/MovieMap.store
