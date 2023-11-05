@@ -2,11 +2,14 @@ import { Request, Response } from 'express';
 import moviegeoDb from '../db/moviegeo.db';
 import tmdbUtil from '../util/tmdb.util';
 
+const img_url = "https://image.tmdb.org/t/p/original"
+
+
 const addMovie = async (req : Request, res : Response) => {
     var tmdb_id = req.query.tmdb_id;
     if (typeof tmdb_id != 'string') return;
 
-    var movie_details = await tmdbUtil.movieGet(tmdb_id).catch( (error : Error) => {
+    var movie_details = await tmdbUtil.movieGet(tmdb_id, true).catch( (error : Error) => {
         console.log(error);
         res.status(500).json({'message': 'Unable to fetch movie details from TMDB'});
         return
@@ -16,9 +19,13 @@ const addMovie = async (req : Request, res : Response) => {
     var insData = {
             tmdb_id: movie_details.id,
             title: movie_details.title,
-            release_date: movie_details.release_date
+            release_date: movie_details.release_date,
+            overview: movie_details.overview,
+            poster_path: img_url + movie_details.poster_path,
+            director: movie_details.credits.crew.filter(({job} : {job: string}) => job ==='Director')[0]?.name
     }
-
+    console.log(insData)
+    
     await moviegeoDb.insertMovie(insData).catch( (error:Error) => {
         if(!res.headersSent) {
             res.status(500).json({'message': 'Unable to insert film'});
@@ -32,7 +39,7 @@ const addMovie = async (req : Request, res : Response) => {
 const addLocation = async (req : Request, res : Response) => {
     console.log(req.body);
     await moviegeoDb.insertLocation(req.body).then( (result) => {
-        res.status(200).json(result);
+        res.status(200).json(result[0]);
     }).catch((error : Error) =>{
         console.log(error)
         res.status(500).json({message: 'Unable to insert location'})
@@ -69,6 +76,7 @@ const movieLocationsGet = async (req : Request, res : Response) => {
     await moviegeoDb.getMovieLocations(movie_id).then((result : any) => {
         res.status(200).json(result);
     }).catch( (error : Error) => {
+        console.log(error);
         res.status(500).json({message: 'Unable to get'});
     })
 }

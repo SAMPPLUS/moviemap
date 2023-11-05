@@ -17,14 +17,14 @@ app.use(bodyParser.urlencoded({
 
 const router = Router();
 
-app.use(express.static('public'))
+
 
 router.use('/moviegeo', movieGeoRouter);
 router.use('/tmdb', TmdbRouter);
  
 app.use('/api/', router);
 
-
+app.use('/api/',express.static('public'))
 const port = process.env.PORT;
  
 // Handling '/' Request

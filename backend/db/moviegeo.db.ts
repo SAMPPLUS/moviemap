@@ -23,11 +23,14 @@ const hasMovie = async (tmdb_id : string) => {
         where tmdb_id=${ tmdb_id }`
 }
 
-interface movieInsValues { tmdb_id: string; title: string; release_date: string}
+interface movieInsValues { tmdb_id: string; title: string; release_date: string; overview: string; director: string; poster_path: string;}
 const insertMovie = async (vals : movieInsValues) => {
     return sql`
         insert into movies
         ${sql(vals)}
+        ON CONFLICT (tmdb_id)
+        DO UPDATE SET
+        (overview, director, poster_path)=(EXCLUDED.overview, EXCLUDED.director, EXCLUDED.poster_path)
         returning *`
 }
 
@@ -49,8 +52,8 @@ const insertLocation = async (vals : locValues) => {
 
 const getMovieLocations = async (movie_id : string ) => {
     return sql`
-    select * from locations
-    where movie_id=${sql(movie_id)}
+    select *, ST_X(geo::geometry) AS lng, ST_Y(geo::geometry) AS lat from locations
+    where movie_id=${movie_id}
     `
 }
 
