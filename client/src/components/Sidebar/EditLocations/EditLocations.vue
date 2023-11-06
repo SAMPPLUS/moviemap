@@ -1,4 +1,5 @@
 <script setup lang="ts">
+    import ImageUploader from './modules/ImageUploader.vue'
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useEditLocationStore } from '@/stores/EditLocation.store';
     import { ref } from 'vue';
@@ -18,6 +19,7 @@
         <input type="number" v-model.number="editStore.selectedLocation.position.lat" step="0.1">
         <input type="number" v-model.number="editStore.selectedLocation.position.lng" step="0.1">
         {{ editStore.selectedLocation?.position }}
+        <ImageUploader/>
 
     </div>
 </template>

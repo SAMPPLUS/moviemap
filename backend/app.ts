@@ -3,7 +3,6 @@ import express, { Express, Request, Response, Router } from 'express';
 require('dotenv').config()
 var logger = require('morgan');
 import bodyParser from 'body-parser';
-
 import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
 
@@ -11,6 +10,7 @@ import TmdbRouter from './routes/tmdb.routes';
 const app = express();
 app.use(logger('dev'));
 app.use(express.json());
+
 app.use(bodyParser.urlencoded({
     extended: true
   }));

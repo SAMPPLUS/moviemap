@@ -81,11 +81,17 @@ const movieLocationsGet = async (req : Request, res : Response) => {
     })
 }
 
+const imgUpload = async (req: Request, res : Response) => {
+    console.log(req);
+    res.status(200).json({message: 'success'})
+}
+
 
 export default {
     addMovie,
     addLocation,
     movieGet,
     movieGetTMDB,
-    movieLocationsGet
+    movieLocationsGet,
+    imgUpload
   }
