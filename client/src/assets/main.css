@@ -30,7 +30,7 @@ body {
   height: 100vh;
   width: 100vw;
   display: grid;
-  grid-template-columns: 800px auto;
+  grid-template-columns: 760px auto;
 }
 
 .sidebar-comp {

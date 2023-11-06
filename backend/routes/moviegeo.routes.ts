@@ -14,7 +14,7 @@ movieGeoRouter.get('/mget', moviegeoCtrl.movieGet);
 
 movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 
-movieGeoRouter.post('/linsert', moviegeoCtrl.addLocation);
+movieGeoRouter.post('/linsert', FileMiddleware.diskLoader.single('image'), moviegeoCtrl.addLocation);
 
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet);
 

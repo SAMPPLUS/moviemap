@@ -38,9 +38,6 @@
     //movieMapStore
   }
 
-
-
-
   movieMapStore.$onAction(
         ({
           name, // name of the action

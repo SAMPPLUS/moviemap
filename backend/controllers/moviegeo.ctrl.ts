@@ -38,6 +38,15 @@ const addMovie = async (req : Request, res : Response) => {
 
 const addLocation = async (req : Request, res : Response) => {
     console.log(req.body);
+    var imgFileName : (string | undefined) = req?.file?.filename;
+    if(!imgFileName){
+        res.status(400).json({})
+        return
+    }
+    req.body['main_img_path'] = imgFileName
+    console.log(req.body)
+    
+    
     await moviegeoDb.insertLocation(req.body).then( (result) => {
         res.status(200).json(result[0]);
     }).catch((error : Error) =>{
@@ -82,7 +91,7 @@ const movieLocationsGet = async (req : Request, res : Response) => {
 }
 
 const imgUpload = async (req: Request, res : Response) => {
-    console.log(req);
+    console.log(req.file);
     res.status(200).json({message: 'success'})
 }
 

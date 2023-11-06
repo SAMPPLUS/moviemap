@@ -34,16 +34,16 @@ const insertMovie = async (vals : movieInsValues) => {
         returning *`
 }
 
-interface locValues { movie_id: string; title: string; lat: string; long: string;};
+interface locValues { movie_id: string; title: string; lat: string; long: string; description: string; main_img_path: string };
 const insertLocation = async (vals : locValues) => {
     var ins : object = {
         movie_id: vals.movie_id,
         title: vals.title,
+        description: vals.description,
+        main_img_path: vals.main_img_path,
         geo: `POINT(${vals.long} ${vals.lat})`
     };
     
-    console.log(ins);
-
     return sql`
         insert into locations
         ${sql(ins)}

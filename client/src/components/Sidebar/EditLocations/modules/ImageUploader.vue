@@ -1,11 +1,11 @@
 <script setup lang="ts">
-    import { ref } from 'vue'
+    import { ref} from 'vue';
+    import axios from 'axios';
     const previewImage = ref()
+    const emit =defineEmits(['newImage'])
+    //const imageFile = ref<File>()
 
 
-    interface InputFileEvent extends Event {
-        target: HTMLInputElement;
-    }
     const uploadImage = (e: Event) => {
         const image = (e.target as HTMLInputElement).files?.[0]
         if(!image) return
@@ -15,7 +15,10 @@
             previewImage.value = e.target?.result;
             console.log(previewImage);
         };
+        emit('newImage', image)
     }
+
+    
 </script>
 
 <template>

@@ -6,14 +6,16 @@ import axios from "axios"
 export const useMovieMapStore = defineStore('moviemap', () => {
     //STATE
     const num = ref<number>(73)
-    const filmDetails = ref();
 
-    type location = {lat: number, lng: number, id: number, title: string, movie_id: string}
-    const locations = ref<location[]>([])
+    type FilmDetails = {id: string; [propName: string]: any;}
+    const filmDetails = ref<FilmDetails>();
+
+    type Location = {lat: number, lng: number, id: number, title: string, movie_id: string}
+    const locations = ref<Location[]>([])
     const selectedLocationIdx = ref<number | undefined>(undefined)
 
-    type modeOption = "movie" | "edit";
-    const mode = ref<modeOption>("movie")
+    type ModeOption = "movie" | "edit";
+    const mode = ref<ModeOption>("movie")
     
     //GETTERS
 
@@ -44,7 +46,9 @@ export const useMovieMapStore = defineStore('moviemap', () => {
         })
     }
 
-    const setMode = async (newMode: modeOption) => {
+    
+
+    const setMode = async (newMode: ModeOption) => {
         mode.value = newMode
     }
 
