@@ -5,7 +5,7 @@ import type { Ref } from 'vue';
 
 const store = useMovieMapStore()
 
-const hl_img : string = "/api/images/spaceodyssey.jpeg";
+const hl_img : string = "/api/images/highansdlow042.jpg";
 
 const displayScroll = async (element : HTMLDivElement) => {
     setTimeout(function(){
@@ -18,10 +18,13 @@ const onCardClick = (index: number) =>{
     store.setSelectedLocationIdx(index);
 }
 
+const cardImageError = (e : Event) => {
+    console.log(e)
+    //(e.target as HTMLImageElement).src = store.placeholderStill
+}
+
 const cardRefs = ref<HTMLDivElement[]>([])
-const card1 = ref<HTMLDivElement>()
-const card2 = ref<HTMLDivElement>()
-const lastcard = ref<HTMLDivElement>()
+
 
 store.$onAction(
         ({
@@ -56,8 +59,8 @@ onMounted(() => {
 <div class="scene-selector">
     <div class="scroller">
         <div class="end" ></div>
-        <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)">
-            <img :src="hl_img" class="loc-image">
+        <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
+            <img :src="(location.main_img_path) || (store.placeholderStill)" class="loc-image">
         </div>
         
         <div class="end"></div>
@@ -96,8 +99,7 @@ onMounted(() => {
 .card {
     height: 100%;
     aspect-ratio: 16 / 9;
-    margin: 0 2% 0 2%;
-    border-radius: .5em ;
+    margin: 0 1.5% 0 1.5%;
 }
 
 .card:hover {
@@ -110,6 +112,5 @@ onMounted(() => {
     height: 100%;
     object-fit: cover;
     overflow: hidden;
-    border-radius: .5em;
 }
 </style>

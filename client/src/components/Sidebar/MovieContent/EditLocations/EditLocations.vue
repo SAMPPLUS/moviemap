@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    import ImageUploader from './modules/ImageUploader.vue'
+    import ImageUploader from './ImageUploader.vue'
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useEditLocationStore } from '@/stores/EditLocation.store';
     import { ref } from 'vue';
@@ -31,10 +31,9 @@
     const submit = () => {
         console.log('submit')
         if(!imageFile.value){
-            console.log('no image')
             return
         }
-        editStore.postNewLocation(imageFile.value)
+        editStore.postNewLocation(imageFile.value, movieMapStore?.filmDetails?.id || '',  formData.value)
     }
     
 

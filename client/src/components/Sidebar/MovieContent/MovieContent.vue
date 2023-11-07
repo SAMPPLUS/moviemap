@@ -1,6 +1,5 @@
 <script setup lang="ts">
-    import MovieDetails from './modules/MovieDetails.vue';
-    import SceneSelector from './modules/SceneSelector.vue';
+    import SceneSelector from './MovieDetails/SceneSelector.vue';
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useRoute } from 'vue-router';
     
@@ -14,7 +13,7 @@
 
 <template>
 <div class="sidebar-comp" id="movie-content">
-    <MovieDetails></MovieDetails>
+    <router-view></router-view>
     <SceneSelector style="margin-top: auto;"></SceneSelector>
 </div>
 

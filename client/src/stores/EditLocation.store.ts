@@ -9,13 +9,18 @@ export const useEditLocationStore = defineStore('editlocations', () => {
 
 
     //ACTION
-    const postNewLocation = async(imageFile : File) => {
+    const postNewLocation = async(imageFile : File, movie_id: string, data: object) => {
  
-    
-        let data = new FormData();
         let fd = new FormData();
         fd.append('image', imageFile)
-        await axios.post('/api/moviegeo/imgupload', fd).then((r) => {
+        for (const [key, value] of Object.entries(data)) {
+          fd.append(key,value)
+        }
+        for (const [key, value]of Object.entries(selectedLocation.value.position)) {
+          fd.append(key,value.toString())
+        }
+        fd.append('movie_id', movie_id)
+        await axios.post('/api/moviegeo/linsert', fd).then((r) => {
           console.log(r)
         })
       }

@@ -54,7 +54,7 @@
           if(name=='setSelectedLocationIdx'){
             if(args[0] != undefined){
               var l = movieMapStore.locations[args[0]]
-              map.value?.leafletObject.setView([l.lat, l.lng], 11, {animate: true})
+              map.value?.leafletObject.setView([l.lat, l.lng], 13, {animate: true})
             }
             
           }
@@ -86,7 +86,7 @@
           :draggable="false"
           @click="movieMapStore.setSelectedLocationIdx(index)"
         >
-          <l-tooltip ><img class="tt-image" src="/api/images/spaceodyssey.jpeg"></l-tooltip>
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
         </l-marker>
         <l-control-zoom position="bottomright" zoom-in-text="+" zoom-out-text="-" />
       </l-map>
