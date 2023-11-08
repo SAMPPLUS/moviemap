@@ -13,11 +13,9 @@
       <h1>Movie Map</h1>
     </div>
     <div id="sidebar-content">
-      <router-view></router-view>
+      <router-view/>
     </div>
   </div>
-
-  
 </template>
 
 <style scoped>

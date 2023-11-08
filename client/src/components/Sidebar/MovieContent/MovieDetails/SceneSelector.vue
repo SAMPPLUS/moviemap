@@ -1,9 +1,10 @@
 <script  setup lang="ts">
 import { useMovieMapStore } from '@/stores/MovieMap.store';
 import { ref, onMounted } from 'vue';
-import type { Ref } from 'vue';
+import { useRouter} from 'vue-router';
 
 const store = useMovieMapStore()
+const router = useRouter()
 
 const hl_img : string = "/api/images/highansdlow042.jpg";
 
@@ -15,7 +16,9 @@ const displayScroll = async (element : HTMLDivElement) => {
 }
 
 const onCardClick = (index: number) =>{
+    
     store.setSelectedLocationIdx(index);
+    router.push({name: 'movieLocation'})
 }
 
 const cardImageError = (e : Event) => {
@@ -74,13 +77,14 @@ onMounted(() => {
     width: 100%;
     padding: 15px 0 18px 0;
     outline: 1px solid rgb(24, 24, 24);
-    height: 24%;
+    height: 20%;
     background: rgb(0, 0, 0);
     border-right: 2px solid black;
     border-left: 2px solid black;
     overflow-x: scroll;
     scrollbar-color: white;
     overflow-x: scroll;
+    -webkit-overflow-scrolling: touch;
     overflow-y: hidden;
 }
 .scroller {

@@ -46,8 +46,8 @@
                 <input type="text" v-model="formData.title" placeholder="title">
             </div>
             <div class="edit-row">
-                <input type="number" v-model.number="editStore.selectedLocation.position.lat" step="0.1">
-                <input type="number" v-model.number="editStore.selectedLocation.position.lng" step="0.1">
+                <input type="number" v-model.number="editStore.newLocation.position.lat" step="0.1">
+                <input type="number" v-model.number="editStore.newLocation.position.lng" step="0.1">
             </div>
             <div class="edit-row">
                 <textarea v-model="formData.description" spellcheck="true" placeholder="description"></textarea>
@@ -58,7 +58,7 @@
             <button @click="submit"> SUBMIT</button>
         </div>
         {{ formData }}
-        {{ editStore.selectedLocation.position }}
+        {{ editStore.newLocation.position }}
     </div>
 </template>
 
@@ -84,4 +84,4 @@
     display: flex;
     flex-direction: row;
 }
-</style>
+</style>@/stores/EditLocation.store

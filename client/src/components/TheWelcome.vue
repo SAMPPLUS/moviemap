@@ -30,7 +30,7 @@ import WelcomeItem from './WelcomeItem.vue'
     <a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> and
     <a href="https://on.cypress.io/component" target="_blank" rel="noopener"
       >Cypress Component Testing</a
-    >.
+    >
 
     <br />
 

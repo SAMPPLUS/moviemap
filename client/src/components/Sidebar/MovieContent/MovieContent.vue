@@ -5,15 +5,16 @@
     
     const store = useMovieMapStore();
     store.setMode('movie')
+    console.log(useRoute().params);
     
-    store.fetchMovieDetails(useRoute().params.id as string)
+    store.fetchMovieDetails(useRoute().params.movie_id as string)
     
 
 </script>
 
 <template>
 <div class="sidebar-comp" id="movie-content">
-    <router-view></router-view>
+    <router-view name="mainMovieContent"></router-view>
     <SceneSelector style="margin-top: auto;"></SceneSelector>
 </div>
 

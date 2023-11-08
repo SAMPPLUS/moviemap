@@ -6,13 +6,13 @@ import placeholder from "../../public/images/placeholder-still.jpeg"
 
 export const useMovieMapStore = defineStore('moviemap', () => {
     //STATE
-    const num = ref<number>(73)
 
     type FilmDetails = {id: string; [propName: string]: any;}
     const filmDetails = ref<FilmDetails>();
 
     type Location = {lat: number, lng: number, id: number, title: string, movie_id: string, main_img_path: string, description: string}
     const locations = ref<Location[]>([])
+    
     const selectedLocationIdx = ref<number | undefined>(undefined)
 
     type ModeOption = "movie" | "edit";
@@ -28,6 +28,11 @@ export const useMovieMapStore = defineStore('moviemap', () => {
         if(!filmDetails.value || (locations.value?.length)) return false
         if(filmDetails.value.id != locations.value[0].movie_id) return true
         return false
+    })
+
+    const selectedLocation = computed<Location|null>(() => {
+        if((selectedLocationIdx.value == undefined) || (!locations.value)) return null
+        return locations.value[selectedLocationIdx.value]
     })
 
     //ACTIONS
@@ -59,5 +64,5 @@ export const useMovieMapStore = defineStore('moviemap', () => {
         selectedLocationIdx.value = idx
     }
 
-    return {num, filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, fetchMovieDetails, setMode, setSelectedLocationIdx}
+    return {filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation, fetchMovieDetails, setMode, setSelectedLocationIdx}
 })

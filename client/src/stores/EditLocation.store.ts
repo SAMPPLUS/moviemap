@@ -5,7 +5,7 @@ import axios from "axios"
 
 export const useEditLocationStore = defineStore('editlocations', () => {
     //STATE
-    const selectedLocation = ref<{position : L.LatLngLiteral}>({ position: { lng: -1.571045 as number, lat: 47.457809 as number } })
+    const newLocation = ref<{position : L.LatLngLiteral}>({ position: { lng: -1.571045 as number, lat: 47.457809 as number } })
 
 
     //ACTION
@@ -16,7 +16,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
         for (const [key, value] of Object.entries(data)) {
           fd.append(key,value)
         }
-        for (const [key, value]of Object.entries(selectedLocation.value.position)) {
+        for (const [key, value]of Object.entries(newLocation.value.position)) {
           fd.append(key,value.toString())
         }
         fd.append('movie_id', movie_id)
@@ -25,5 +25,5 @@ export const useEditLocationStore = defineStore('editlocations', () => {
         })
       }
 
-    return {selectedLocation, postNewLocation}
+    return {newLocation, postNewLocation}
 })

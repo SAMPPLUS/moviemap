@@ -1,32 +1,45 @@
 import {createRouter, createWebHistory, createWebHashHistory} from 'vue-router'
 import App from '@/App.vue'
 import MovieContentVue from '@/components/Sidebar/MovieContent/MovieContent.vue'
-import EditLocationsVue from '@/components/Sidebar/MovieContent/EditLocations/EditLocations.vue'
-import MovieDetailsVue from '@/components/Sidebar/MovieContent/MovieDetails/MovieDetails.vue'
-const routes = [
+import { type RouteRecordRaw } from 'vue-router'
+
+const MovieDetails = import('@/components/Sidebar/MovieContent/MovieDetails/MovieDetails.vue')
+const EditLocations = import('@/components/Sidebar/MovieContent/EditLocations/EditLocations.vue')
+const LocationDetails = import('@/components/Sidebar/MovieContent/MovieDetails/LocationDetails.vue')
+
+const routes : RouteRecordRaw[]= [
     {
         path: '/',
-        component: MovieContentVue
+        redirect: {name: 'movieInfo', params: { movie_id: '19' }}
     },
     {
-        path: '/movie/:id(\\d+)',
+        path: '/movie/:movie_id(\\d+)',
         component: MovieContentVue,
+        name: 'movie',
         children: [
             {
-              // UserProfile will be rendered inside User's <router-view>
-              // when /user/:id/profile is matched
-              path: 'edit',
-              component: EditLocationsVue,
+                path: 'info',
+                name: 'movieInfo',
+                components: {
+                    mainMovieContent: MovieDetails
+                }
             },
             {
-                path: 'info',
-                component: MovieDetailsVue
+                path: 'edit',
+                name: 'movieEdit',
+                components:{
+                    mainMovieContent: EditLocations
+                } 
+            },
+            {
+                path: 'loc/:loc_id(\\d+)?',
+                name: 'movieLocation',
+                components: {
+                    mainMovieContent: LocationDetails
+                } 
             }
-        ]
-    },
-    {
-        path: '/edit/:id(\\d+)',
-        component: EditLocationsVue
+        ],
+        redirect: {name: 'movieInfo'}
     }
 ]
 
