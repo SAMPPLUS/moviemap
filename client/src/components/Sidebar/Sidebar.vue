@@ -35,7 +35,8 @@
 }
 
 #sidebar-content {
-  height: 100%;
+  height: 100vh;
+  max-height: 100vh;
   padding: 80px 0px 0 0px;
 }
 

@@ -14,7 +14,7 @@
 
 <template>
 <div class="sidebar-comp" id="movie-content">
-    <router-view name="mainMovieContent"></router-view>
+    <router-view style="overflow-y: auto;" name="mainMovieContent"></router-view>
     <SceneSelector style="margin-top: auto;"></SceneSelector>
 </div>
 

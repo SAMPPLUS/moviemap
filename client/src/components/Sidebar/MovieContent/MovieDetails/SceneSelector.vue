@@ -78,6 +78,7 @@ onMounted(() => {
     padding: 15px 0 18px 0;
     outline: 1px solid rgb(24, 24, 24);
     height: 20%;
+    min-height: 20%;
     background: rgb(0, 0, 0);
     border-right: 2px solid black;
     border-left: 2px solid black;

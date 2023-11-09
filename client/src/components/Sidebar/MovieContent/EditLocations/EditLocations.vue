@@ -24,9 +24,11 @@
     movieMapStore.setMode('edit')
     movieMapStore.fetchMovieDetails(useRoute().params.id as string)
 
-    const newImage = (file : File) => {
+    const sceneImage = (file : File, m : string) => {
         imageFile.value = file;
     }
+
+
 
     const submit = () => {
         console.log('submit')
@@ -52,8 +54,17 @@
             <div class="edit-row">
                 <textarea v-model="formData.description" spellcheck="true" placeholder="description"></textarea>
             </div>
+
+            <h1>Images</h1>
             
-            <ImageUploader @new-image="newImage"/>
+            <ImageUploader @new-image="sceneImage"/>
+
+            <ImageUploader @new-image="sceneImage"/>
+            <ImageUploader @new-image="sceneImage"/>
+
+            <ImageUploader @new-image="sceneImage"/>
+
+
 
             <button @click="submit"> SUBMIT</button>
         </div>
@@ -62,7 +73,7 @@
     </div>
 </template>
 
-<style>
+<style scoped>
 
 #location-form {
     padding: 0 30px 0 30px;

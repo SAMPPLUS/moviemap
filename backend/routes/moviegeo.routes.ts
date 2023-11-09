@@ -4,6 +4,8 @@ import validate from './validate';
 import moviegeoSchema from './schema/moviegeo.schema';
 import  FileMiddleware  from '../middleware/filemiddleware';
 import multer from 'multer';
+import { Request, Response } from 'express';
+
 const upload = multer({ dest: 'public/images/' })
 
 var movieGeoRouter = express.Router();
@@ -18,7 +20,8 @@ movieGeoRouter.post('/linsert', FileMiddleware.diskLoader.single('image'), movie
 
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet);
 
-movieGeoRouter.post('/imgupload', FileMiddleware.diskLoader.single('image'), moviegeoCtrl.imgUpload)
+movieGeoRouter.post('/imgupload', FileMiddleware.diskLoader.any(), moviegeoCtrl.imgUpload)
+
 
 
 export default movieGeoRouter

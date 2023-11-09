@@ -39,6 +39,7 @@ const addMovie = async (req : Request, res : Response) => {
 const imgPath : string = "/api/images/"
 const addLocation = async (req : Request, res : Response) => {
     console.log(req.file);
+    console.log(req.body)
     var imgFileName : (string | undefined) = req?.file?.filename;
     if(!imgFileName){
         res.status(400).json({})
@@ -93,8 +94,9 @@ const movieLocationsGet = async (req : Request, res : Response) => {
 }
 
 const imgUpload = async (req: Request, res : Response) => {
-    console.log(req.file);
-    res.status(200).json({message: 'success'})
+    console.log(req.body);
+    console.log(req.files)
+    res.status(200).json({body: req.body, files: req.files})
 }
 
 
