@@ -59,26 +59,33 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="scene-selector">
-    <div class="scroller">
-        <div class="end" ></div>
-        <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
-            <img :src="(location.main_img_path) || (store.placeholderStill)" class="loc-image">
+<div class="ss-container">
+    <div>hello</div>
+    <div class="scene-selector">
+        <div class="scroller">
+            <div class="end" ></div>
+            <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
+                <img :src="(location.main_img_path) || (store.placeholderStill)" class="loc-image">
+            </div>
+            
+            <div class="end"></div>
         </div>
-        
-        <div class="end"></div>
     </div>
 </div>
 </template>
 
 <style>
+.ss-container {
+    display: flex;
+    flex-direction: column;
+
+}
 .scene-selector {
     max-width: 100%;
+    min-width: 100%;
     width: 100%;
-    padding: 15px 0 18px 0;
+    padding: 2% 0 2% 0;
     outline: 1px solid rgb(24, 24, 24);
-    height: 20%;
-    min-height: 20%;
     background: rgb(0, 0, 0);
     border-right: 2px solid black;
     border-left: 2px solid black;
@@ -87,6 +94,8 @@ onMounted(() => {
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
     overflow-y: hidden;
+    min-height: 140px;
+    flex-grow: 1;
 }
 .scroller {
     min-width: 100%;
@@ -98,7 +107,7 @@ onMounted(() => {
 }
 
 .end {
-    min-width: 80px;
+    min-width: 60px;
 }
 
 .card {
