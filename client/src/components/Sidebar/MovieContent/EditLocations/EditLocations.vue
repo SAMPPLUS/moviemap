@@ -2,10 +2,12 @@
     import ImageUploader from './ImageUploader.vue'
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useEditLocationStore } from '@/stores/EditLocation.store';
-    import { ref } from 'vue';
+    import { ref, onBeforeMount} from 'vue';
     import { useRoute } from 'vue-router';
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
+
+    
 
     type LocFormData = {
         movie_id: string;
@@ -23,11 +25,21 @@
     
     movieMapStore.setMode('edit')
     movieMapStore.fetchMovieDetails(useRoute().params.id as string)
+    editStore.appendImageField();
+    editStore.appendImageField();
 
-    const sceneImage = (file : File, m : string) => {
-        imageFile.value = file;
+    const inputLatLng = (e : Event, type: ('lat' | 'lng')) => {
+        if(!e.target) return
+        var val : number = Number((e.target as HTMLTextAreaElement).value)
+        if(type == 'lat'){
+            //val = Math.min(Math.max(val, -90), 90)
+            editStore.newLocation.position.lat = val
+        }
+        else{
+            //val = Math.min(Math.max(val, -180), 180)
+            editStore.newLocation.position.lng = val
+        }
     }
-
 
 
     const submit = () => {
@@ -44,12 +56,13 @@
     <div class="sidebar-comp" >
         <div id="location-form">
             <h1>New Location</h1>
+            <div>{{ editStore.images }}</div>
             <div class="edit-row">
                 <input type="text" v-model="formData.title" placeholder="title">
             </div>
             <div class="edit-row">
-                <input type="number" v-model.number="editStore.newLocation.position.lat" step="0.1">
-                <input type="number" v-model.number="editStore.newLocation.position.lng" step="0.1">
+                <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1">
+                <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1">
             </div>
             <div class="edit-row">
                 <textarea v-model="formData.description" spellcheck="true" placeholder="description"></textarea>
@@ -57,19 +70,11 @@
 
             <h1>Images</h1>
             
-            <ImageUploader @new-image="sceneImage"/>
+            <ImageUploader v-for="(image,index) in editStore.images" @new-image="" :index="index"/>
 
-            <ImageUploader @new-image="sceneImage"/>
-            <ImageUploader @new-image="sceneImage"/>
-
-            <ImageUploader @new-image="sceneImage"/>
-
-
-
+            
             <button @click="submit"> SUBMIT</button>
         </div>
-        {{ formData }}
-        {{ editStore.newLocation.position }}
     </div>
 </template>
 

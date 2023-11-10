@@ -19,13 +19,13 @@
   
   const mapClick = (e : Event) => {
     if((movieMapStore.mode == 'edit') && 'latlng' in e){
-      editStore.newLocation.position = e.latlng as LatLngLiteral
+      editStore.newLocation.position = e.latlng as L.LatLng
     }
 
   }
   const dragEndNewMarker = (e: Event) => {
     //TODO: This function shouldn't be necessary, position not updating as expected on drag
-    if((e.target) && ('_latlng' in e.target)) editStore.newLocation.position = e.target._latlng as LatLngLiteral
+    if((e.target) && ('_latlng' in e.target)) editStore.newLocation.position = e.target._latlng as L.LatLng
   }
 
   const pauseThenZoomBounds = async () => {
@@ -66,7 +66,7 @@
 <template>
   <div class="map-zone">
     <div style="height:100vh; ">
-      <l-map ref="map" v-model:zoom="zoom" @click="mapClick"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2}">
+      <l-map ref="map" v-model:zoom="zoom" @click="mapClick"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2, worldCopyJump: true}">
         <l-tile-layer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           layer-type="base"

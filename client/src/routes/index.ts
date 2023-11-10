@@ -3,9 +3,9 @@ import App from '@/App.vue'
 import MovieContentVue from '@/components/Sidebar/MovieContent/MovieContent.vue'
 import { type RouteRecordRaw } from 'vue-router'
 
-const MovieDetails = import('@/components/Sidebar/MovieContent/MovieDetails/MovieDetails.vue')
-const EditLocations = import('@/components/Sidebar/MovieContent/EditLocations/EditLocations.vue')
-const LocationDetails = import('@/components/Sidebar/MovieContent/MovieDetails/LocationDetails.vue')
+const MovieDetails = () => import('@/components/Sidebar/MovieContent/MovieDetails/MovieDetails.vue')
+const EditLocations = () => import('@/components/Sidebar/MovieContent/EditLocations/EditLocations.vue')
+const LocationDetails = () => import('@/components/Sidebar/MovieContent/MovieDetails/LocationDetails.vue')
 
 const routes : RouteRecordRaw[]= [
     {

@@ -43,7 +43,6 @@ const insertLocation = async (vals : locValues) => {
         main_img_path: vals.main_img_path,
         geo: `POINT(${vals.lng} ${vals.lat})`
     };
-    console.log(ins)
     return sql`
         insert into locations
         ${sql(ins)}
@@ -57,6 +56,15 @@ const getMovieLocations = async (movie_id : string ) => {
     `
 }
 
+const insertImage = async (fileName : string) => {
+    return sql`
+    insert into locationimages
+    (file_name)
+    values (${ fileName })
+    returning id
+    `
+}
+
 
 export default {
     getMovieById,
@@ -64,5 +72,6 @@ export default {
     hasMovie,
     insertMovie,
     insertLocation,
-    getMovieLocations
+    getMovieLocations,
+    insertImage
 }

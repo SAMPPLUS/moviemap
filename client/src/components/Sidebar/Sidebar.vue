@@ -37,7 +37,7 @@
 #sidebar-content {
   height: 100vh;
   max-height: 100vh;
-  padding: 80px 0px 0 0px;
+  padding: 65px 0px 0 0px;
 }
 
 </style>../assets/stores/MovieMap.store

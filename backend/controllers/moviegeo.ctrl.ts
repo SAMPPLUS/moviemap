@@ -94,9 +94,14 @@ const movieLocationsGet = async (req : Request, res : Response) => {
 }
 
 const imgUpload = async (req: Request, res : Response) => {
-    console.log(req.body);
-    console.log(req.files)
-    res.status(200).json({body: req.body, files: req.files})
+    if(!req.file) return
+    await moviegeoDb.insertImage(req.file.filename).then((data) => {
+        console.log(data);
+        res.status(200).json(data[0])
+    }).catch ((error : Error) => {
+        console.log(error);
+        res.status(500).json({message: 'Unable to insert image'});
+    })
 }
 
 

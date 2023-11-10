@@ -16,11 +16,11 @@ movieGeoRouter.get('/mget', moviegeoCtrl.movieGet);
 
 movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 
-movieGeoRouter.post('/linsert', FileMiddleware.diskLoader.single('image'), moviegeoCtrl.addLocation);
+movieGeoRouter.post('/linsert', moviegeoCtrl.addLocation);
 
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet);
 
-movieGeoRouter.post('/imgupload', FileMiddleware.diskLoader.any(), moviegeoCtrl.imgUpload)
+movieGeoRouter.post('/imgupload', FileMiddleware.diskLoader.single('image'), moviegeoCtrl.imgUpload)
 
 
 

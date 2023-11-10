@@ -5,8 +5,12 @@ const movieMapStore = useMovieMapStore()
 
 </script>
 <template>
-    location details
-    
-    {{ movieMapStore.selectedLocation }}
+    <div>
+        <div>
+            location details
+        </div>
+
+        {{ movieMapStore.selectedLocation }}
+    </div>
 </template>
 <style></style>
