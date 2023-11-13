@@ -6,7 +6,7 @@ import {type imageObject } from "@/interfaces/edit.int"
 
 export const useEditLocationStore = defineStore('editlocations', () => {
     //STATE
-    const newLocation = ref<{position : L.LatLng}>({ position: new L.LatLng(47.457809,-1.571045) })
+    const newLocation = ref<{position : L.LatLng, title: string, description: string}>({ position: new L.LatLng(47.457809,-1.571045), title: '', description: '' })
 
     
     const images = ref<imageObject[]>([])
@@ -28,19 +28,17 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       return axios.post('/api/moviegeo/imgupload', fd)
     }
 
-    const postNewLocation = async(imageFile : File, movie_id: string, data: object) => {
- 
-        let fd = new FormData();
-        fd.append('image', imageFile)
-        for (const [key, value] of Object.entries(data)) {
-          fd.append(key,value)
-        }
-        for (const [key, value]of Object.entries(newLocation.value.position)) {
-          fd.append(key,value.toString())
-        }
-        fd.append('movie_id', movie_id)
-        await axios.post('/api/moviegeo/linsert', fd).then((r) => {
-          console.log(r)
+    const postNewLocation = async () => {
+        
+        
+        await axios.post('/api/moviegeo/linsert', {
+          
+            location: newLocation.value,
+            images: images.value
+          
+        })
+        .then((ret) => {
+          console.log(ret)
         })
       }
 

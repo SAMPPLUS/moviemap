@@ -14,8 +14,8 @@
 
 <template>
 <div class="sidebar-comp" id="movie-content">
-    <router-view style="overflow-y: auto;" name="mainMovieContent"></router-view>
-    <SceneSelector style="margin-top: auto; height: 20%; "></SceneSelector>
+    <router-view style="overflow-y: auto; background-color: var(--color-background);" name="mainMovieContent"></router-view>
+    <SceneSelector style="margin-top: auto; height: 20%; min-height: 150px; "></SceneSelector>
 </div>
 
 </template>
@@ -25,6 +25,5 @@
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  
 }
 </style>

@@ -45,9 +45,9 @@
     const submit = () => {
         console.log('submit')
         if(!imageFile.value){
-            return
+            //return
         }
-        editStore.postNewLocation(imageFile.value, movieMapStore?.filmDetails?.id || '',  formData.value)
+        editStore.postNewLocation()
     }
     
 
@@ -58,14 +58,14 @@
             <h1>New Location</h1>
             <div>{{ editStore.images }}</div>
             <div class="edit-row">
-                <input type="text" v-model="formData.title" placeholder="title">
+                <input type="text" v-model="editStore.newLocation.title" placeholder="title">
             </div>
             <div class="edit-row">
                 <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1">
                 <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1">
             </div>
             <div class="edit-row">
-                <textarea v-model="formData.description" spellcheck="true" placeholder="description"></textarea>
+                <textarea v-model="editStore.newLocation.description" spellcheck="true" placeholder="description"></textarea>
             </div>
 
             <h1>Images</h1>

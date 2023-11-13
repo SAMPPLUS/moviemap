@@ -30,7 +30,7 @@
 
   const pauseThenZoomBounds = async () => {
     setTimeout(() => {
-                  if(map.value && (movieMapStore.selectedLocationIdx==undefined)) map.value.leafletObject.flyToBounds((movieMapStore.locations as { lat: number, lng: number }[]).map(i => [i.lat,i.lng]), {duration: 1})
+      if(map.value && (movieMapStore.selectedLocationIdx==undefined) && movieMapStore.locations.length) map.value.leafletObject.flyToBounds((movieMapStore.locations as { lat: number, lng: number }[]).map(i => [i.lat,i.lng]), {duration: 1})
                 },1000)
   }
 

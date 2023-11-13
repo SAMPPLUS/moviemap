@@ -1,5 +1,7 @@
 
-import sql from './db'
+import { PendingQuery, PostgresType } from 'postgres';
+import sql  from './db'
+import { Row } from 'postgres';
 
 const getMovieById = async (id : string) => {
     return sql`
@@ -34,20 +36,43 @@ const insertMovie = async (vals : movieInsValues) => {
         returning *`
 }
 
-interface locValues { movie_id: string; title: string; lat: string; lng: string; description: string; main_img_path: string };
-const insertLocation = async (vals : locValues) => {
-    var ins : object = {
-        movie_id: vals.movie_id,
-        title: vals.title,
-        description: vals.description,
-        main_img_path: vals.main_img_path,
-        geo: `POINT(${vals.lng} ${vals.lat})`
+interface locValues { movie_id: string; title: string; lat: string; lng: string; description: string; main_img_path?: string };
+interface imageValues {id: string; description: string; type: number; file_name: string}
+const insertLocation = async (vals : {location: locValues, images: any[]}) => {
+    var locIns = {
+        movie_id: vals.location.movie_id,
+        title: vals.location.title,
+        description: vals.location.description,
+        geo: `POINT(${vals.location.lng} ${vals.location.lat})`
     };
-    return sql`
-        insert into locations
-        ${sql(ins)}
-        returning *`
+    var qArr : PendingQuery<Row[]>[] = []
+
+    var location_id = await sql`
+    insert into locations
+    ${sql(locIns)}
+    returning id`
+
+    vals.images.forEach((image: imageValues) => {
+        var id: string =  image.id
+        var imgIns = {
+            description: image.description,
+            type : image.type,
+            location_id:
+        }
+        qArr.push(sql`
+        update locationimages set
+        ${sql(image)}
+        where 
+        `)
+    })
+
+
+    return sql.begin(async sql => {
+        
+
+    })
 }
+
 
 const getMovieLocations = async (movie_id : string ) => {
     return sql`

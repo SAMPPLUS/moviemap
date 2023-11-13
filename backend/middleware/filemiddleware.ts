@@ -14,7 +14,7 @@ export default class FileMiddleware {
           cb(null, path.join(__dirname, '../public/images'));
         },
         filename: function (req, file, cb) {
-          cb(null, file.originalname)
+          cb(null, Date.now()+ '-' + file.originalname)
         }
       }),
       limits: {

@@ -60,7 +60,7 @@ onMounted(() => {
 
 <template>
 <div class="ss-container">
-    <div style="color: white; background-color: black; font-size: 1.1em; padding-left: 10px;">hello</div>
+    <div style="color: white; background-color: black; font-size: 1em; padding-left: 10px;">hello</div>
     <div class="scene-selector">
         <div class="scroller">
             <div class="end" ></div>
@@ -86,14 +86,13 @@ onMounted(() => {
     width: 100%;
     padding: 2% 0 2% 0;
     outline: 1px solid rgb(24, 24, 24);
-    background-image: linear-gradient(black, rgb(19, 19, 19));
+    background-image: linear-gradient(black, rgb(62, 62, 62));
     border-right: 2px solid black;
     border-left: 2px solid black;
     scrollbar-color: white;
     overflow-x: scroll;
     -webkit-overflow-scrolling: touch;
     overflow-y: hidden;
-    min-height: 140px;
     flex-grow: 1;
 }
 .scroller {
