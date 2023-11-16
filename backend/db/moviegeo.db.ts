@@ -46,31 +46,33 @@ const insertLocation = async (vals : {location: locValues, images: any[]}) => {
         geo: `POINT(${vals.location.lng} ${vals.location.lat})`
     };
     var qArr : PendingQuery<Row[]>[] = []
-
-    var location_id = await sql`
+    console.log(locIns);
+    var location_ins = await sql`
     insert into locations
     ${sql(locIns)}
     returning id`
 
+    var location_id = location_ins[0]['id']
+
+    console.log(location_id)
     vals.images.forEach((image: imageValues) => {
         var id: string =  image.id
         var imgIns = {
             description: image.description,
             type : image.type,
-            location_id:
+            location_id: location_id
         }
-        qArr.push(sql`
+        console.log(imgIns)
+        sql`
         update locationimages set
-        ${sql(image)}
+        ${sql(imgIns)}
         where 
-        `)
+        id= ${id}
+        `
     })
 
 
-    return sql.begin(async sql => {
-        
-
-    })
+    return 
 }
 
 
