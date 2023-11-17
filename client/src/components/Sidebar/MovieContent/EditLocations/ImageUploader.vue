@@ -8,11 +8,21 @@
     const emit =defineEmits(['newImage'])
     const editStore = useEditLocationStore();
     //const imageFile = ref<File>()
-    const props  = defineProps({
-        index: Number
-    })
+    const props  = defineProps<{
+        index: number
+        type: (1|2)
+    }>()
 
-    const thisImage = ref<imageObject>(editStore.images[props.index as number])
+    const imgGroup = ref()
+
+    if(props.type ==1){
+        imgGroup.value = editStore.sceneImages
+    }
+    else{
+        imgGroup.value = editStore.locationImages
+    }
+
+    const thisImage = ref<imageObject>(imgGroup.value[props.index as number])
 
 
     const uploadImage = async (e: Event) => {
@@ -46,12 +56,8 @@
             <div class="image-metadata">
                 <textarea maxlength="140" placeholder="caption" v-model="thisImage.description"></textarea>
                 <div class="image-options">
-                    <input type="checkbox"  name="main" >
+                    <input type="checkbox"  name="main" :checked="thisImage.main" :disabled="thisImage.main" @click="$event => editStore.setMainImage($event, props.type, props.index)">
                     <label for="main"> Main </label>
-                    <select name="image type" id="imagetype" style="margin-left: 10px" v-model="thisImage.type">
-                        <option value="1">movie still</option>
-                        <option value="2">location image</option>
-                    </select>
                 </div>
 
             </div>

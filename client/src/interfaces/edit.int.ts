@@ -1,1 +1,1 @@
-export interface imageObject { id?: string; description: string; file?: File; type: string}
+export interface imageObject { id?: string; description: string; file?: File; type: 1 | 2, main: boolean}

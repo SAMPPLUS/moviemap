@@ -25,8 +25,9 @@
     
     movieMapStore.setMode('edit')
     movieMapStore.fetchMovieDetails(useRoute().params.id as string)
-    editStore.appendImageField();
-    editStore.appendImageField();
+    editStore.appendImageField(1, true);
+    editStore.appendImageField(1, false);
+    editStore.appendImageField(2, true);
 
     const inputLatLng = (e : Event, type: ('lat' | 'lng')) => {
         if(!e.target) return
@@ -56,7 +57,7 @@
     <div class="sidebar-comp" >
         <div id="location-form">
             <h1>New Location</h1>
-            <div>{{ editStore.images }}</div>
+            <div>{{ editStore.sceneImages }}</div>
             <div class="edit-row">
                 <input type="text" v-model="editStore.newLocation.title" placeholder="title">
             </div>
@@ -68,9 +69,13 @@
                 <textarea v-model="editStore.newLocation.description" spellcheck="true" placeholder="description"></textarea>
             </div>
 
-            <h1>Images</h1>
+            <h2>Scene Images</h2>
             
-            <ImageUploader v-for="(image,index) in editStore.images" @new-image="" :index="index"/>
+            <ImageUploader v-for="(image,index) in editStore.sceneImages" @new-image="" :index="index" :type="1"/>
+
+            <h2>Location Images</h2>
+
+            <ImageUploader v-for="(image,index) in editStore.locationImages" @new-image="" :index="index" :type="2"/>
 
             
             <button @click="submit"> SUBMIT</button>
