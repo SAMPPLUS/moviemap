@@ -24,7 +24,7 @@
 
     
     movieMapStore.setMode('edit')
-    movieMapStore.fetchMovieDetails(useRoute().params.id as string)
+    //movieMapStore.fetchMovieDetails(useRoute().params.id as string)
     editStore.appendImageField(1, true);
     editStore.appendImageField(1, false);
     editStore.appendImageField(2, true);
@@ -57,7 +57,7 @@
     <div class="sidebar-comp" >
         <div id="location-form">
             <h1>New Location</h1>
-            <div>{{ editStore.sceneImages }}</div>
+            <div>{{ editStore.newLocation }}</div>
             <div class="edit-row">
                 <input type="text" v-model="editStore.newLocation.title" placeholder="title">
             </div>

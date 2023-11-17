@@ -14,7 +14,7 @@ const cleanImages = async () => {
     deleted.forEach((el : object) => {
         if('file_name' in el){
             fs.unlink(img_path + el.file_name, (err) => {
-                if (err) console.log("failed to delete local image:"+err);
+                if (err) console.log("failed to delete local image: "+err);
                 else {
                     console.log("deleted file: " + el.file_name)
                 }

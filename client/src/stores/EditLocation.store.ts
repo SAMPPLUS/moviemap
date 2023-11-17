@@ -1,12 +1,17 @@
 import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
 import axios from "axios"
-import L, { imageOverlay } from "leaflet"
+import L from "leaflet"
 import {type imageObject } from "@/interfaces/edit.int"
+import { useMovieMapStore } from "./MovieMap.store"
 
 export const useEditLocationStore = defineStore('editlocations', () => {
+
+    const MMStore = useMovieMapStore();
+
     //STATE
-    const newLocation = ref<{position : L.LatLng, title: string, description: string}>({ position: new L.LatLng(47.457809,-1.571045), title: '', description: '' })
+    interface locFormData  {position : L.LatLng; title: string; description: string; movie_id?: string}
+    const newLocation = ref<locFormData>({ position: new L.LatLng(47.457809,-1.571045), title: '', description: '' })
 
     
     const sceneImages = ref<imageObject[]>([])
@@ -35,12 +40,13 @@ export const useEditLocationStore = defineStore('editlocations', () => {
     }
 
     const postNewLocation = async () => {
+        newLocation.value.movie_id = MMStore.filmDetails.id
+
+        var locData : Required<locFormData> = newLocation.value
         
         await axios.post('/api/moviegeo/linsert', {
-          
-            location: newLocation.value,
-            images: sceneImages.value
-          
+            location: locData,
+            images: sceneImages.value.concat(locationImages.value)   
         })
         .then((ret) => {
           console.log(ret)

@@ -36,8 +36,8 @@ const insertMovie = async (vals : movieInsValues) => {
 }
 
 
-type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
-interface locValues { movie_id: string; title: string; lat: string; lng: string; description: string; main_img_path?: string };
+type position = {lat: number, lng: number}
+interface locValues { movie_id: string; title: string; position: position; description: string; main_img_path?: string };
 
 interface imageValues {id: string; description: string; type: number; file_name: string; location_id?: string}
 type imageIns =Omit<imageValues, 'id'>
@@ -46,8 +46,9 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
         movie_id: locVals.movie_id,
         title: locVals.title,
         description: locVals.description,
-        geo: `POINT(${locVals.lng} ${locVals.lat})`
+        geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
     };
+    console.log(locIns)
 
     return sql.begin('read write', async sql => {
         const [location] = await sql`
