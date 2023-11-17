@@ -1,14 +1,16 @@
 
 import express, { Express, Request, Response, Router } from 'express';
-require('dotenv').config()
-var logger = require('morgan');
+import 'dotenv/config'
+import morgan from 'morgan';
 import bodyParser from 'body-parser';
+
+import { testAlert } from './scheduled/cron';
 import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
 
 // Initialize the express engine
 const app = express();
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(express.json());
 
 app.use(bodyParser.urlencoded({
@@ -26,6 +28,8 @@ app.use('/api/', router);
 
 app.use('/api/',express.static('public'))
 const port = process.env.PORT;
+
+//testAlert.start();
  
 // Handling '/' Request
 app.get('/', (req : Request, res: Response) => {

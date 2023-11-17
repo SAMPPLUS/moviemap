@@ -1,5 +1,4 @@
 
-import { PendingQuery, PostgresType } from 'postgres';
 import sql  from './db'
 import { Row } from 'postgres';
 
@@ -36,41 +35,60 @@ const insertMovie = async (vals : movieInsValues) => {
         returning *`
 }
 
-interface locValues { movie_id: string; title: string; lat: string; lng: string; description: string; main_img_path?: string };
-interface imageValues {id: string; description: string; type: number; file_name: string}
-const insertLocation = async (vals : {location: locValues, images: any[]}) => {
-    var locIns = {
-        movie_id: vals.location.movie_id,
-        title: vals.location.title,
-        description: vals.location.description,
-        geo: `POINT(${vals.location.lng} ${vals.location.lat})`
-    };
-    var qArr : PendingQuery<Row[]>[] = []
 
-    var location_id = await sql`
+type PartialBy<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
+interface locValues { movie_id: string; title: string; lat: string; lng: string; description: string; main_img_path?: string };
+
+interface imageValues {id: string; description: string; type: number; file_name: string; location_id?: string}
+type imageIns =Omit<imageValues, 'id'>
+const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
+    var locIns = {
+        movie_id: locVals.movie_id,
+        title: locVals.title,
+        description: locVals.description,
+        geo: `POINT(${locVals.lng} ${locVals.lat})`
+    };
+
+    return sql.begin('read write', async sql => {
+        const [location] = await sql`
+        insert into locations
+        ${sql(locIns)}
+        returning id`
+
+        var imageQueries : Array<Promise<Row>> = []
+
+        imgVals.forEach((element : imageValues) => {
+            
+            element['location_id'] = location.id;
+            imageQueries.push(sql.savepoint(sql => sql`
+            update locationimages set
+            ${sql(element as imageIns)}
+            where 
+            id=${element.id}
+            returning id
+            `))
+        });
+        
+        await Promise.all(imageQueries).then((rets) => {
+            console.log(rets);
+        })
+
+        return [location ]
+    })
+
+    return sql`
     insert into locations
     ${sql(locIns)}
     returning id`
 
-    vals.images.forEach((image: imageValues) => {
-        var id: string =  image.id
-        var imgIns = {
-            description: image.description,
-            type : image.type,
-            location_id:
-        }
-        qArr.push(sql`
-        update locationimages set
-        ${sql(image)}
-        where 
-        `)
-    })
+}
 
-
-    return sql.begin(async sql => {
-        
-
-    })
+const updateLocationImage = async (vals: imageValues) => {
+    return sql`
+    update locationimages set
+    ${sql(vals)}
+    where 
+    `
 }
 
 
@@ -97,6 +115,7 @@ export default {
     hasMovie,
     insertMovie,
     insertLocation,
+    updateLocationImage,
     getMovieLocations,
     insertImage
 }

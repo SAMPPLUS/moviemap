@@ -40,14 +40,16 @@ const imgPath : string = "/api/images/"
 const addLocation = async (req : Request, res : Response) => {
     console.log(req.body)
     res.status(200).json(req.body)  
-    return
     
-    await moviegeoDb.insertLocation(req.body).then( (result) => {
-        res.status(200).json(result[0]);
-    }).catch((error : Error) =>{
+    
+    var insertResult = await moviegeoDb.insertLocation(req.body.location, req.body.images).catch((error : Error) =>{
         console.log(error)
         res.status(500).json({message: 'Unable to insert location'})
-    })
+    });
+
+    if(!insertResult || insertResult.length != 1 || !('id' in insertResult[0])){
+        res.status(500).json({message: 'Location Insert Error'})
+    }
 }
 
 const movieGet = async (req : Request, res : Response) => {
