@@ -76,10 +76,6 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
         return [location ]
     })
 
-    return sql`
-    insert into locations
-    ${sql(locIns)}
-    returning id`
 
 }
 

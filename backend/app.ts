@@ -4,7 +4,7 @@ import 'dotenv/config'
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
 
-import { testAlert } from './scheduled/cron';
+import cron from './scheduled/cron';
 import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
 
@@ -29,7 +29,10 @@ app.use('/api/', router);
 app.use('/api/',express.static('public'))
 const port = process.env.PORT;
 
+
+//cron jobs
 //testAlert.start();
+cron.cleanImagesTask.start();
  
 // Handling '/' Request
 app.get('/', (req : Request, res: Response) => {

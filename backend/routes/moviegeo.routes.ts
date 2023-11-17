@@ -6,7 +6,7 @@ import  FileMiddleware  from '../middleware/filemiddleware';
 import multer from 'multer';
 import { Request, Response } from 'express';
 
-const upload = multer({ dest: 'public/images/' })
+const upload = multer({ dest: 'public/images/uploads' })
 
 var movieGeoRouter = express.Router();
 

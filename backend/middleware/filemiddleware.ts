@@ -11,7 +11,7 @@ export default class FileMiddleware {
     public static readonly diskLoader = multer({
       storage: multer.diskStorage({
         destination: (_req, _file, cb) => {
-          cb(null, path.join(__dirname, '../public/images'));
+          cb(null, path.join(__dirname, '../public/images/uploads'));
         },
         filename: function (req, file, cb) {
           cb(null, Date.now()+ '-' + file.originalname)
