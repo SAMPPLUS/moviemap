@@ -35,7 +35,10 @@
             previewImage.value = e.target?.result
             console.log(previewImage)
         };
-        await editStore.uploadImage(image).then((ret) => {
+
+        let fd = new FormData();
+        fd.append('image', image)
+        await axios.post('/api/moviegeo/imgupload', fd).then((ret) => {
             if(ret.data.id){
                 thisImage.value.id = ret.data.id
             }

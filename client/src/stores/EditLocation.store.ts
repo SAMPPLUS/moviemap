@@ -4,12 +4,15 @@ import axios from "axios"
 import L from "leaflet"
 import {type imageObject } from "@/interfaces/edit.int"
 import { useMovieMapStore } from "./MovieMap.store"
-
+import { type apiStatus } from "@/types/types"
 export const useEditLocationStore = defineStore('editlocations', () => {
 
     const MMStore = useMovieMapStore();
 
     //STATE
+
+    const saveStatus = ref<apiStatus>('unattempted')
+
     interface locFormData  {position : L.LatLng; title: string; description: string; movie_id?: string}
     const newLocation = ref<locFormData>({ position: new L.LatLng(47.457809,-1.571045), title: '', description: '' })
 
@@ -33,25 +36,21 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       return newImage
     }
 
-    const uploadImage = async(imageFile: File) => {
-      let fd = new FormData();
-      fd.append('image', imageFile)
-      return axios.post('/api/moviegeo/imgupload', fd)
-    }
 
     const postNewLocation = async () => {
-        newLocation.value.movie_id = MMStore.filmDetails.id
+      if(!MMStore.filmDetails) return;
+      newLocation.value.movie_id = MMStore.filmDetails.id as string
 
-        var locData : Required<locFormData> = newLocation.value
-        
-        await axios.post('/api/moviegeo/linsert', {
-            location: locData,
-            images: sceneImages.value.concat(locationImages.value)   
-        })
-        .then((ret) => {
-          console.log(ret)
-        })
-      }
+      var locData  = newLocation.value as Required<locFormData>
+      
+      await axios.post('/api/moviegeo/linsert', {
+          location: locData,
+          images: sceneImages.value.concat(locationImages.value)   
+      })
+      .then((ret) => {
+        console.log(ret)
+      })
+  }
 
     const setMainImage = async(event: Event, type : 1|2, index: number) => {
       var imageGroup
@@ -63,5 +62,5 @@ export const useEditLocationStore = defineStore('editlocations', () => {
 
     }
 
-    return {newLocation, sceneImages, locationImages, wrappedNewLocation, appendImageField, uploadImage, postNewLocation, setMainImage}
+    return {saveStatus, newLocation, sceneImages, locationImages, wrappedNewLocation, appendImageField, postNewLocation, setMainImage}
 })

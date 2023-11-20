@@ -2,15 +2,24 @@ import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
 import axios from "axios"
 import placeholder from "../../public/images/placeholder-still.jpeg"
+import { useRouter } from 'vue-router';
+import { type apiStatus } from "@/types/types"
+
 
 
 export const useMovieMapStore = defineStore('moviemap', () => {
+
+    const router = useRouter()
+
     //STATE
 
-    type FilmDetails = {id: string; [propName: string]: any;}
-    const filmDetails = ref<FilmDetails>();
+    const movieFetchingStatus = ref<apiStatus>('unattempted')
+    const locFetchingStatus = ref<apiStatus>('unattempted')
 
-    type Location = {lat: number, lng: number, id: number, title: string, movie_id: string, main_img_path: string, description: string}
+    type FilmDetails = {id: string; [propName: string]: any;}
+    const filmDetails = ref<FilmDetails>()
+
+    type Location = {lat: number, lng: number, id: string, title: string, movie_id: string, main_img_path: string, description: string}
     const locations = ref<Location[]>([])
     
     const selectedLocationIdx = ref<number | undefined>(undefined)
@@ -36,24 +45,6 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     })
 
     //ACTIONS
-    const fetchMovieDetails = async (id: string) => {
-        axios.get('/api/moviegeo/mget', {
-            params: {
-                id: id
-            }
-        }).then((film) => {
-            filmDetails.value= film.data[0]
-        })
-        await axios.get('/api/moviegeo/mlocget', {
-            params: {
-                movie_id: id
-            }
-        }).then((l) => {
-            locations.value = l.data
-            selectedLocationIdx.value=undefined
-        })
-    }
-
     
 
     const setMode = async (newMode: ModeOption) => {
@@ -62,7 +53,13 @@ export const useMovieMapStore = defineStore('moviemap', () => {
 
     const setSelectedLocationIdx = (idx: number) => {
         selectedLocationIdx.value = idx
+        if(mode.value == 'movie'){
+            router.push({name: 'movieLocation', params: { }})
+        }
+        else if(mode.value == 'edit') {
+
+        }
     }
 
-    return {filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation, fetchMovieDetails, setMode, setSelectedLocationIdx}
+    return {locFetchingStatus, movieFetchingStatus, filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation,  setMode, setSelectedLocationIdx}
 })

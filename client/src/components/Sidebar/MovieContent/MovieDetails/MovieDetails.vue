@@ -3,6 +3,8 @@
   import { useMovieMapStore } from '@/stores/MovieMap.store'
 
   const store = useMovieMapStore();
+  store.setMode('movie')
+
 
 </script>
 

@@ -11,11 +11,27 @@
 
   const center : Ref<PointExpression> = ref([32.842, -37.089])
   const map = ref<typeof LMap>()
+
+  
+  interface queuedAction {func: string; params : any[]}
+  const mapQueuedAction= ref<undefined | queuedAction>()
+  const isMapReady = ref<boolean>(map.value ? true : false)
   const mapBounds = ref<LatLngBounds>()
 
   const movieMapStore = useMovieMapStore()
   const editStore = useEditLocationStore()
   const zoom : Ref<number> = ref(props.startzoom || 4)
+
+
+  
+  const startActionSubscribe = () => {
+
+  }
+
+  const mapReady = (e: Event) => {
+    isMapReady.value = true
+    console.log(mapQueuedAction.value)
+  }
   
   const mapClick = (e : Event) => {
     if((movieMapStore.mode == 'edit') && 'latlng' in e){
@@ -46,19 +62,27 @@
           after, // hook after the action returns or resolves
           onError, // hook if the action throws or rejects
         }) => {
-          if(name=='fetchMovieDetails'){
-            after(() =>{
-                pauseThenZoomBounds()          
-            })
-          }
+          // if(name=='fetchMovieDetails'){
+          //   after(() =>{
+          //       pauseThenZoomBounds()          
+          //   })
+          // }
           if(name=='setSelectedLocationIdx'){
             if(args[0] != undefined){
               var l = movieMapStore.locations[args[0]]
-              map.value?.leafletObject.setView([l.lat, l.lng], 13, {animate: true})
+              if(isMapReady.value && map.value){
+                map.value.leafletObject.setView([l.lat, l.lng], 13, {animate: true})
+              }
+              else{
+                mapQueuedAction.value = {func: 'setView', params: [l]}
+              }
+              
             }
             
           }
         })
+
+
 
   
 </script>
@@ -66,7 +90,7 @@
 <template>
   <div class="map-zone">
     <div style="height:100vh; ">
-      <l-map ref="map" v-model:zoom="zoom" @click="mapClick"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2, worldCopyJump: true}">
+      <l-map ref="map" v-model:zoom="zoom" @click="mapClick" @ready="mapReady"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2, worldCopyJump: true}">
         <l-tile-layer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           layer-type="base"

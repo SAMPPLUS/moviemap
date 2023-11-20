@@ -20,6 +20,8 @@ movieGeoRouter.post('/linsert', moviegeoCtrl.addLocation);
 
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet);
 
+//movieGeoRouter.get('/')
+
 movieGeoRouter.post('/imgupload', FileMiddleware.diskLoader.single('image'), moviegeoCtrl.imgUpload)
 
 

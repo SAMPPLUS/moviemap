@@ -2,12 +2,12 @@
     import SceneSelector from './MovieDetails/SceneSelector.vue';
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useRoute } from 'vue-router';
+    import movieGeoService from '@/api/movieGeoService';
     
     const store = useMovieMapStore();
-    store.setMode('movie')
-    console.log(useRoute().params);
-    
-    store.fetchMovieDetails(useRoute().params.movie_id as string)
+    var movie_id = useRoute().params.movie_id as string
+    movieGeoService.fetchMovie(movie_id)
+    movieGeoService.fetchLocations(movie_id)
     
 
 </script>

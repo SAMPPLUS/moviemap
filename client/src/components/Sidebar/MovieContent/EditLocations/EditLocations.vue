@@ -7,28 +7,19 @@
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
 
-    
-
-    type LocFormData = {
-        movie_id: string;
-        title: string;
-        lat: number;
-        lng: number;
-        description: string;
-        image: File
-    }
-    const imageFile = ref<File>()
-    const formData = ref({ 
-        title: '',
-        description: ''})
-
-    
     movieMapStore.setMode('edit')
-    //movieMapStore.fetchMovieDetails(useRoute().params.id as string)
-    editStore.appendImageField(1, true);
-    editStore.appendImageField(1, false);
-    editStore.appendImageField(2, true);
 
+    onBeforeMount(() => {
+        editStore.appendImageField(1, true);
+        editStore.appendImageField(1, false);
+        editStore.appendImageField(2, true);
+    })
+
+    
+
+    const imageFile = ref<File>()
+
+  
     const inputLatLng = (e : Event, type: ('lat' | 'lng')) => {
         if(!e.target) return
         var val : number = Number((e.target as HTMLTextAreaElement).value)

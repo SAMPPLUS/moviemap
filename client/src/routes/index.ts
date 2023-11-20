@@ -32,7 +32,7 @@ const routes : RouteRecordRaw[]= [
                 } 
             },
             {
-                path: 'loc/:loc_id(\\d+)?',
+                path: 'loc/:loc_id(\\d+)',
                 name: 'movieLocation',
                 components: {
                     mainMovieContent: LocationDetails

@@ -2,8 +2,8 @@
 import { useMovieMapStore } from '@/stores/MovieMap.store';
 import { ref, onMounted } from 'vue';
 import { useRouter} from 'vue-router';
-
-const store = useMovieMapStore()
+import { storeToRefs } from 'pinia';
+const movieMapStore = useMovieMapStore()
 const router = useRouter()
 
 const hl_img : string = "/api/images/highansdlow042.jpg";
@@ -17,8 +17,8 @@ const displayScroll = async (element : HTMLDivElement) => {
 
 const onCardClick = (index: number) =>{
     
-    store.setSelectedLocationIdx(index);
-    router.push({name: 'movieLocation'})
+    movieMapStore.setSelectedLocationIdx(index);
+    //router.push({name: 'movieLocation'})
 }
 
 const cardImageError = (e : Event) => {
@@ -28,8 +28,10 @@ const cardImageError = (e : Event) => {
 
 const cardRefs = ref<HTMLDivElement[]>([])
 
+const {locFetchingStatus} = storeToRefs(movieMapStore)
 
-store.$onAction(
+onMounted(() => {
+    movieMapStore.$onAction(
         ({
           name, // name of the action
           store, // store instance, same as `someStore`
@@ -39,22 +41,13 @@ store.$onAction(
         }) => {
 
           if(name=='setSelectedLocationIdx'){
-            if(args[0] != undefined){
-                cardRefs.value[args[0]].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'})
+            console.log(cardRefs.value.length, args[0], movieMapStore.locations.length)
+            if(args[0] != undefined && movieMapStore.locFetchingStatus=='success'){
+                //cardRefs.value[args[0]].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'})
             }
             
           }
         })
-
-onMounted(() => {
-    /*
-    if(lastcard.value){
-        lastcard.value.scrollIntoView({behavior: 'instant'})
-    }
-    if(card1.value){
-        displayScroll(card1.value);
-    }*/
-    
 })
 </script>
 
@@ -64,8 +57,8 @@ onMounted(() => {
     <div class="scene-selector">
         <div class="scroller">
             <div class="end" ></div>
-            <div class="card" v-for="(location, index) in store.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
-                <img :src="(location.main_img_path) || (store.placeholderStill)" class="loc-image">
+            <div class="card" v-if="movieMapStore.locFetchingStatus == 'success'" v-for="(location, index) in movieMapStore.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
+                <img :src="(location.main_img_path) || (movieMapStore.placeholderStill)" class="loc-image">
             </div>
             
             <div class="end"></div>

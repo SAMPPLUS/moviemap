@@ -55,8 +55,9 @@ const movieGet = async (req : Request, res : Response) => {
     if(typeof req.query.id != 'string'){return}
     var id : string = req.query.id;
     await moviegeoDb.getMovieById(id).then((result: any) => {
-        console.log(result);
-        res.status(200).json(result);
+        if(result.length == 0) res.status(404).json({'message': 'this movie does not exist'});
+        else res.status(200).json(result);
+
     }).catch( (error:Error) => {
         console.log(error);
         if(!res.headersSent) {
