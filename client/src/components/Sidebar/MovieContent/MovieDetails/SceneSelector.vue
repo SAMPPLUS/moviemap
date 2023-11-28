@@ -17,7 +17,7 @@ const displayScroll = async (element : HTMLDivElement) => {
 
 const onCardClick = (index: number) =>{
     
-    movieMapStore.setSelectedLocationIdx(index);
+    movieMapStore.setSelectedLocationId(index);
     //router.push({name: 'movieLocation'})
 }
 
@@ -40,8 +40,8 @@ onMounted(() => {
           onError, // hook if the action throws or rejects
         }) => {
 
-          if(name=='setSelectedLocationIdx'){
-            console.log(cardRefs.value.length, args[0], movieMapStore.locations.length)
+          if(name=='setSelectedLocationId'){
+            //console.log(cardRefs.value.length, args[0], Object.keys(movieMapStore.locations).length)
             if(args[0] != undefined && movieMapStore.locFetchingStatus=='success'){
                 //cardRefs.value[args[0]].scrollIntoView({behavior: 'smooth', block: 'center', inline: 'center'})
             }

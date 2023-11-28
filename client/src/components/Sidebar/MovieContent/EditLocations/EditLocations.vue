@@ -11,7 +11,6 @@
 
     onBeforeMount(() => {
         editStore.appendImageField(1, true);
-        editStore.appendImageField(1, false);
         editStore.appendImageField(2, true);
     })
 
@@ -33,6 +32,16 @@
         }
     }
 
+    const deleteImgObject = (type: (1|2), index : number) => {
+        var imageGroup
+        if(type==1) imageGroup = editStore.sceneImages 
+        else imageGroup = editStore.locationImages
+        console.log(index);
+        console.log(imageGroup[index])
+        imageGroup.splice(index,1)
+        console.log(imageGroup)
+
+    }
 
     const submit = () => {
         console.log('submit')
@@ -62,14 +71,17 @@
 
             <h2>Scene Images</h2>
             
-            <ImageUploader v-for="(image,index) in editStore.sceneImages" @new-image="" :index="index" :type="1"/>
-
+            <ImageUploader v-for="(image,index) in editStore.sceneImages" :key="image.key" @new-image="" @delete="deleteImgObject(1, index)" :image-object="image" :index="index" :type="1"/>
+            <div class="add-row">
+                <button @click="editStore.appendImageField(1,false)">+</button>
+            </div>
             <h2>Location Images</h2>
 
-            <ImageUploader v-for="(image,index) in editStore.locationImages" @new-image="" :index="index" :type="2"/>
-
-            
-            <button @click="submit"> SUBMIT</button>
+            <ImageUploader v-for="(image,index) in editStore.locationImages" :key="image.key" @new-image="" @delete="deleteImgObject(2, index)" :image-object="image" :index="index" :type="2"/>
+            <div class="add-row">
+                <button @click="editStore.appendImageField(2,false)">+</button>
+            </div>
+            <button @click="submit" > SUBMIT</button>
         </div>
     </div>
 </template>
@@ -95,5 +107,8 @@
     padding-bottom: 18px;
     display: flex;
     flex-direction: row;
+}
+.add-row{
+    text-align: right;
 }
 </style>@/stores/EditLocation.store

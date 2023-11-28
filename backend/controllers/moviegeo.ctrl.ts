@@ -1,13 +1,17 @@
 import { Request, Response } from 'express';
 import moviegeoDb from '../db/moviegeo.db';
 import tmdbUtil from '../util/tmdb.util';
-
+import { TypedRequest, TypedRequestBody, TypedRequestQuery, ValueRequest} from '../interfaces/request.intrf';
+import { TmdbReq, movieGetReq, locationReq } from '../interfaces/requests';
 const img_url = "https://image.tmdb.org/t/p/original"
 
 
-const addMovie = async (req : Request, res : Response) => {
-    var tmdb_id = req.query.tmdb_id;
-    if (typeof tmdb_id != 'string') return;
+const addMovie = async (req : ValueRequest<TmdbReq>, res : Response) => {
+    if(!req.value){ 
+        res.status(500).json({message: 'error validating request'});
+        return
+    }
+    var tmdb_id : string = String(req.value.query.tmdb_id);
 
     var movie_details = await tmdbUtil.movieGet(tmdb_id, true).catch( (error : Error) => {
         console.log(error);
@@ -37,23 +41,28 @@ const addMovie = async (req : Request, res : Response) => {
 }
 
 const imgPath : string = "/api/images/"
-const addLocation = async (req : Request, res : Response) => {
-    console.log(req.body)
-    
-    
-    var insertResult = await moviegeoDb.insertLocation(req.body.location, req.body.images).catch((error : Error) =>{
-        console.log(error)
-        res.status(500).json({message: 'Unable to insert location'})
-    });
+const addLocation = async (req : ValueRequest<locationReq>, res : Response) => {
+    if(!req.value){ 
+        res.status(500).json({message: 'error validating request'});
+        return
+    }    
+    // var insertResult = await moviegeoDb.insertLocation(req.value.body.location, req.value .body.images).catch((error : Error) =>{
+    //     console.log(error)
+    //     res.status(500).json({message: 'Unable to insert location'})
+    // });
 
-    if(!insertResult || insertResult.length != 1 || !('id' in insertResult[0])){
-        res.status(500).json({message: 'Location Insert Error'})
-    }
+    // if(!insertResult || insertResult.length != 1 || !('id' in insertResult[0])){
+    //     res.status(500).json({message: 'Location Insert Error'})
+    // }
 }
 
-const movieGet = async (req : Request, res : Response) => {
-    if(typeof req.query.id != 'string'){return}
-    var id : string = req.query.id;
+const movieGet= async (req : ValueRequest<movieGetReq> , res : Response) => {
+    if(!req.value){ 
+        res.status(500).json({message: 'error validating request'});
+        return
+    }
+
+    var id : string = String(req.value.query.id);
     await moviegeoDb.getMovieById(id).then((result: any) => {
         if(result.length == 0) res.status(404).json({'message': 'this movie does not exist'});
         else res.status(200).json(result);
@@ -66,9 +75,12 @@ const movieGet = async (req : Request, res : Response) => {
     });
 }
 
-const movieGetTMDB = async (req : Request, res : Response) => {
-    if(typeof req.query.tmdb_id != 'string'){return}
-    var tmdb_id : string = req.query.tmdb_id;
+const movieGetTMDB = async (req : ValueRequest<TmdbReq>, res : Response) => {
+    if(!req.value){ 
+        res.status(500).json({message: 'error validating request'});
+        return
+    }
+    var tmdb_id : string = String(req.value.query.tmdb_id);
     await moviegeoDb.getMovieByTMDBId(tmdb_id).then((result : any) => {
         res.status(200).json(result);
     }).catch( (error : Error) => {
@@ -80,7 +92,11 @@ const movieLocationsGet = async (req : Request, res : Response) => {
     if(typeof req.query.movie_id != 'string'){return}
     var movie_id : string = req.query.movie_id;
     await moviegeoDb.getMovieLocations(movie_id).then((result : any) => {
-        res.status(200).json(result);
+        var id_keyed_obj : {[propName: number]: any}= {}
+        result.forEach((res: {id: number, [propName: string]: any}) => {
+            id_keyed_obj[res.id as number] = res
+        });
+        res.status(200).json(id_keyed_obj);
     }).catch( (error : Error) => {
         console.log(error);
         res.status(500).json({message: 'Unable to get'});

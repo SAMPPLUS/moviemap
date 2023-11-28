@@ -26,10 +26,16 @@ const routes : RouteRecordRaw[]= [
             },
             {
                 path: 'edit',
-                name: 'movieEdit',
-                components:{
-                    mainMovieContent: EditLocations
-                } 
+                children: [
+                    {
+                        path: '',
+                        alias: 'new',
+                        name: 'newLocation',
+                        components: {
+                            mainMovieContent: EditLocations
+                        }
+                    }
+                ]
             },
             {
                 path: 'loc/:loc_id(\\d+)',

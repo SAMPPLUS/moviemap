@@ -20,19 +20,22 @@ export const useEditLocationStore = defineStore('editlocations', () => {
     const sceneImages = ref<imageObject[]>([])
     const locationImages = ref<imageObject[]>([])
 
+    const imgCounter = ref<number>(0)
+
     //GETTER
     const wrappedNewLocation = computed<L.LatLng>(() => newLocation.value.position.wrap())
 
     //ACTION
 
     const appendImageField = (type: 1 | 2, main: boolean = false) => {
-      var newImage : imageObject = {description: '', type: type, main: main}
+      var newImage : imageObject = {key: imgCounter.value, description: '', type: type, main: main}
       if(type==1){
         sceneImages.value.push(newImage);
       }
       else{
         locationImages.value.push(newImage);
       }
+      imgCounter.value +=1
       return newImage
     }
 
@@ -52,13 +55,15 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       })
   }
 
-    const setMainImage = async(event: Event, type : 1|2, index: number) => {
+    const setMainImage = async(event: Event, type : 1|2, imgObject: imageObject) => {
       var imageGroup
       if(type==1) imageGroup = sceneImages 
       else imageGroup = locationImages
+
       imageGroup.value.forEach((image : imageObject, idx : number) => {
-        image.main = idx == index;
+        image.main = false
       });
+      imgObject.main = true
 
     }
 

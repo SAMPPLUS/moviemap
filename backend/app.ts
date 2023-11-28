@@ -7,6 +7,23 @@ import bodyParser from 'body-parser';
 import cron from './scheduled/cron';
 import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
+import { convertFromDirectory } from 'joi-to-typescript';
+
+convertFromDirectory({
+  schemaDirectory: './schemas',
+  typeOutputDirectory: './interfaces/requests',
+  schemaFileSuffix: '.schema',
+  debug: true
+})
+
+declare global {
+  namespace Express {
+      interface Request {
+          value?: any | undefined;
+      }
+  }
+}
+export {}
 
 // Initialize the express engine
 const app = express();

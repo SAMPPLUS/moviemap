@@ -1,33 +1,46 @@
 <script setup lang="ts">
+console.log('running locationDetails setup script')
 
 import { watch, ref } from 'vue';
 import { useMovieMapStore } from '@/stores/MovieMap.store'
 import type { apiStatus } from '@/types/types';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { storeToRefs } from 'pinia';
 
-const findId = (id : string) =>{
-    var idx = movieMapStore.locations.findIndex(o => o.id == id);
-    if(idx>-1){
-        movieMapStore.setSelectedLocationIdx(idx)
-    }
-    //else 404
-}
-
-
+const router = useRouter()
+const route = useRoute()
+console.log(route.params)
 const movieMapStore = useMovieMapStore()
 const {locFetchingStatus} = storeToRefs(movieMapStore)
-var loc_id = useRoute().params.loc_id as string
+const awaitingFetch = ref<boolean>(false)
+movieMapStore.mode = 'loc'
 
-console.log(locFetchingStatus.value)
-if(movieMapStore.locFetchingStatus !='success'){
-    watch(locFetchingStatus, async (newStatus : apiStatus, oldStatus : apiStatus) => {
-        findId(loc_id)
-    })
+const setLocById = (id : number) =>{
+    if(!(id in movieMapStore.locations)){
+        //TODO: there should be a 404 response here
+        //console.log("could not find this location")
+        router.push({name:'movieInfo'})
+        return
+    }
+    
 }
-else{
-    findId(loc_id)
-}
+
+watch(locFetchingStatus, (newStatus : apiStatus) => {
+        if(!awaitingFetch.value||!route.params.loc_id) return
+        if (newStatus == 'success'){
+            awaitingFetch.value=false
+            setLocById(Number(route.params.loc_id))
+        }
+    }, {immediate: true})
+
+watch(() => route.params.loc_id, (loc_id ) => {
+    if(movieMapStore.locFetchingStatus !='success'){
+        awaitingFetch.value=true
+    }
+    else{
+        setLocById(Number(loc_id))
+    }
+}, {immediate: true})
 
 </script>
 <template>
@@ -35,7 +48,6 @@ else{
         <div>
             location details
         </div>
-
         {{ movieMapStore.selectedLocation }}
     </div>
 </template>

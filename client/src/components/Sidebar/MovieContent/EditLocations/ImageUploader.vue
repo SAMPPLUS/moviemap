@@ -5,11 +5,12 @@
     import {type imageObject } from "@/interfaces/edit.int"
 
     const previewImage = ref()
-    const emit =defineEmits(['newImage'])
+    const emit =defineEmits(['newImage', 'delete'])
     const editStore = useEditLocationStore();
     //const imageFile = ref<File>()
     const props  = defineProps<{
-        index: number
+        index: number,
+        imageObject: imageObject,
         type: (1|2)
     }>()
 
@@ -22,7 +23,7 @@
         imgGroup.value = editStore.locationImages
     }
 
-    const thisImage = ref<imageObject>(imgGroup.value[props.index as number])
+    const thisImage = ref<imageObject>(props.imageObject)
 
 
     const uploadImage = async (e: Event) => {
@@ -47,6 +48,10 @@
         })
     }
 
+    const checkCompletion = () => {
+        
+    }
+
     
 </script>
 
@@ -56,13 +61,15 @@
             <div class="upload-frame">
                 <img :src="previewImage" class="uploading-image" />
             </div>
-            <div class="image-metadata">
-                <textarea maxlength="140" placeholder="caption" v-model="thisImage.description"></textarea>
-                <div class="image-options">
-                    <input type="checkbox"  name="main" :checked="thisImage.main" :disabled="thisImage.main" @click="$event => editStore.setMainImage($event, props.type, props.index)">
-                    <label for="main"> Main </label>
+            <div class="image-data">
+                <div class="delete-row"> <button @click="$emit('delete')">delete</button></div>
+                <div class="image-metadata">
+                    <textarea maxlength="140" placeholder="caption" v-model="thisImage.description"></textarea>
+                    <div class="image-options">
+                        <input type="checkbox"  name="main" :checked="thisImage.main" :disabled="thisImage.main" @click="$event => editStore.setMainImage($event, props.type, thisImage)">
+                        <label for="main"> Main </label>
+                    </div>
                 </div>
-
             </div>
         </div>
         <div >
@@ -99,11 +106,21 @@
     object-fit: contain;
 }
 
+.image-data {
+    flex-grow: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding-left: 10px;
+}
+
+.delete-row {
+    text-align: right;
+}
 .image-metadata {
     flex-grow: 1;
     display: flex;
     flex-direction: column-reverse;
-    padding-left: 10px;
 }
 
 .image-options {
