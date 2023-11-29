@@ -3,6 +3,9 @@ import { useMovieMapStore } from '@/stores/MovieMap.store';
 import { ref, onMounted } from 'vue';
 import { useRouter} from 'vue-router';
 import { storeToRefs } from 'pinia';
+import {IMG_PATH} from '../../../../util/const'
+import { type Location } from "@/types/moviegeo.types";
+
 const movieMapStore = useMovieMapStore()
 const router = useRouter()
 
@@ -24,6 +27,13 @@ const onCardClick = (index: number) =>{
 const cardImageError = (e : Event) => {
     console.log(e)
     //(e.target as HTMLImageElement).src = store.placeholderStill
+}
+
+const getSceneImgPath = (location : Location) => {
+    if(location.scene_img){
+        return IMG_PATH + location.scene_img
+    }
+    else return (location.main_img_path) || (movieMapStore.placeholderStill)
 }
 
 const cardRefs = ref<HTMLDivElement[]>([])
@@ -58,7 +68,7 @@ onMounted(() => {
         <div class="scroller">
             <div class="end" ></div>
             <div class="card" v-if="movieMapStore.locFetchingStatus == 'success'" v-for="(location, index) in movieMapStore.locations" ref=cardRefs @click="onCardClick(index)" onerror="cardImageError()">
-                <img :src="(location.main_img_path) || (movieMapStore.placeholderStill)" class="loc-image">
+                <img :src="getSceneImgPath(location)" class="loc-image">
             </div>
             
             <div class="end"></div>

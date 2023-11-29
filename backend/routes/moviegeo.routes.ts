@@ -11,11 +11,11 @@ const upload = multer({ dest: 'public/images/uploads' })
 
 var movieGeoRouter = express.Router();
 
-movieGeoRouter.post('/minsert', validate(schema.mTmdbSchema) ,moviegeoCtrl.addMovie);
+movieGeoRouter.post('/minsert', moviegeoCtrl.addMovie);
 
-movieGeoRouter.get('/mget', validate(schema.mGetSchema), moviegeoCtrl.movieGet);
+movieGeoRouter.get('/mget', moviegeoCtrl.movieGet);
 
-movieGeoRouter.get('/mgettmdb', validate(schema.mTmdbSchema), moviegeoCtrl.movieGetTMDB);
+movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 
 movieGeoRouter.post('/linsert', validate(schema.lInsertSchema),moviegeoCtrl.addLocation);
 

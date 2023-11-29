@@ -1,6 +1,7 @@
 
 import sql  from './db'
 import { Row } from 'postgres';
+import { locationReq } from '../interfaces/requests';
 
 const getMovieById = async (id : string) => {
     return sql`
@@ -37,9 +38,9 @@ const insertMovie = async (vals : movieInsValues) => {
 
 
 type position = {lat: number, lng: number}
-interface locValues { movie_id: string; title: string; position: position; description: string; main_img_path?: string };
+interface locValues { movie_id: number; title: string; position: position; description: string; main_img_path?: string };
 
-interface imageValues {id: string; description: string; type: number; file_name: string; location_id?: string}
+interface imageValues {id: number; description: string; type: number; location_id?: string}
 type imageIns =Omit<imageValues, 'id'>
 const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
     var locIns = {
@@ -90,10 +91,10 @@ const updateLocationImage = async (vals: imageValues) => {
 
 
 const getMovieLocations = async (movie_id : string ) => {
-    return sql`
-    select *, ST_X(geo::geometry) AS lng, ST_Y(geo::geometry) AS lat from locations
-    where movie_id=${movie_id}
-    `
+    return sql`select locations.*, ST_X(geo::geometry) AS lng, ST_Y(geo::geometry) AS lat, li1.file_name scene_img, li1.description scene_img_desc, li2.file_name loc_img, li2.description loc_img_desc from locations 
+    left join locationimages as li1 on li1.location_id=locations.id and li1.main=true and li1.type=1
+    left join locationimages as li2 on li2.location_id=locations.id and li2.main=true and li2.type=2
+    where locations.movie_id=${movie_id}`
 }
 
 const insertImage = async (fileName : string) => {

@@ -3,6 +3,7 @@ import { ref, computed } from 'vue'
 import axios from "axios"
 import placeholder from "../../public/images/placeholder-still.jpeg"
 import { useRouter } from 'vue-router';
+import { type Location } from "@/types/moviegeo.types";
 import { type apiStatus } from "@/types/types"
 
 
@@ -19,7 +20,6 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     type FilmDetails = {id: string; [propName: string]: any;}
     const filmDetails = ref<FilmDetails>()
 
-    type Location = {lat: number, lng: number, id: string, title: string, movie_id: string, main_img_path: string, description: string}
     const locations = ref<{[propName: number]: Location}>({})
     
     const selectedLocationIdx = ref<number | undefined>(undefined)

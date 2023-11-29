@@ -6,6 +6,8 @@
   import { useMovieMapStore } from "@/stores/MovieMap.store";
   import { useEditLocationStore } from "@/stores/EditLocation.store.js"
   import L, { type LatLngExpression, type LatLngLiteral, LatLngBounds, type PointExpression } from "leaflet"
+  import { type Location } from "@/types/moviegeo.types";
+
   const props  = defineProps({
   startzoom: Number
   })
@@ -143,6 +145,24 @@
           v-for="(location, id) in movieMapStore.locations"
           :key="id"
           :lat-lng="[location.lat,location.lng]"
+          :draggable="false"
+          @click="clickLocationMarker(id)"
+        >
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
+        </l-marker>
+        <l-marker
+          v-for="(location, id) in movieMapStore.locations"
+          :key="id"
+          :lat-lng="[location.lat,location.lng-360]"
+          :draggable="false"
+          @click="clickLocationMarker(id)"
+        >
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
+        </l-marker>
+        <l-marker
+          v-for="(location, id) in movieMapStore.locations"
+          :key="id"
+          :lat-lng="[location.lat,location.lng+360]"
           :draggable="false"
           @click="clickLocationMarker(id)"
         >

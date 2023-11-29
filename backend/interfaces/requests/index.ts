@@ -3,4 +3,4 @@
  * Do not modify this file manually
  */
 
-export * from './moviegeo';
+export * from './moviegeo.intr';

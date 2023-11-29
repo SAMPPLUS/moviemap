@@ -9,12 +9,13 @@ import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
 import { convertFromDirectory } from 'joi-to-typescript';
 
-convertFromDirectory({
-  schemaDirectory: './schemas',
-  typeOutputDirectory: './interfaces/requests',
-  schemaFileSuffix: '.schema',
-  debug: true
-})
+// convertFromDirectory({
+//   schemaDirectory: './schemas',
+//   typeOutputDirectory: './interfaces/requests',
+//   schemaFileSuffix: '.schema',
+//   interfaceFileSuffix: '.intr',
+//   debug: true
+// })
 
 declare global {
   namespace Express {
@@ -58,6 +59,6 @@ app.get('/', (req : Request, res: Response) => {
  
 // Server setup
 app.listen(port, () => {
-    console.log(`TypeScript with Express 
+    console.log(`Listening on 
          http://localhost:${port}/`);
 });

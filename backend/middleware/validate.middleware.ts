@@ -4,7 +4,7 @@ import { ValueRequest } from '../interfaces/request.intrf';
 
 export const validate = (schema : joi.Schema) => {
   return (req: Request, res: Response, next: NextFunction) => {
-    const result = schema.validate({query: req.query, body: req.body, params: req.params});
+    const result = schema.validate(req.body, {stripUnknown: true});
     if (result.error) {
       console.log(result)
       return res.status(400).json({

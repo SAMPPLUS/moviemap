@@ -57,7 +57,6 @@
     <div class="sidebar-comp" >
         <div id="location-form">
             <h1>New Location</h1>
-            <div>{{ editStore.newLocation }}</div>
             <div class="edit-row">
                 <input type="text" v-model="editStore.newLocation.title" placeholder="title">
             </div>
