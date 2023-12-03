@@ -60,7 +60,7 @@
             <div class="edit-row">
                 <input type="text" v-model="editStore.newLocation.title" placeholder="title">
             </div>
-            <div class="edit-row">
+            <div class="edit-row" id="latlng-row">
                 <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1">
                 <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1">
             </div>
@@ -100,6 +100,11 @@
     width: 100%;
     height: 8em;
     resize: vertical;
+}
+
+#latlng-row input {
+    width: 8em;
+    margin-right: 1em;
 }
 
 .edit-row {

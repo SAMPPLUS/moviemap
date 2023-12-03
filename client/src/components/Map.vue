@@ -7,6 +7,7 @@
   import { useEditLocationStore } from "@/stores/EditLocation.store.js"
   import L, { type LatLngExpression, type LatLngLiteral, LatLngBounds, type PointExpression } from "leaflet"
   import { type Location } from "@/types/moviegeo.types";
+  import { IMG_PATH } from "@/util/const";
 
   const props  = defineProps({
   startzoom: Number
@@ -25,6 +26,11 @@
   const editStore = useEditLocationStore()
   const zoom : Ref<number> = ref(props.startzoom || 4)
 
+  const icon  = new  L.Icon.Default()
+  icon.options.iconSize = [50,82]
+  console.log(icon)
+
+  const defaultIcon = ref<L.Icon>(icon as L.Icon)
 
   
   const startActionSubscribe = () => {
@@ -47,7 +53,7 @@
     }
 
   }
-  const dragEndNewMarker = (e: Event) => {
+  const editMarker = (e: Event) => {
     //TODO: This function shouldn't be necessary, position not updating as expected on drag
     if((e.target) && ('_latlng' in e.target)) editStore.newLocation.position = e.target._latlng as L.LatLng
   }
@@ -94,6 +100,13 @@
     }
   })
 
+  const getSceneImgPath = (location : Location) => {
+    if(location.scene_img){
+        return IMG_PATH + location.scene_img
+    }
+    else return (location.main_img_path) || (movieMapStore.placeholderStill)
+}
+
   movieMapStore.$onAction(
         ({
           name, // name of the action
@@ -135,11 +148,12 @@
           name="OpenStreetMap"
         ></l-tile-layer>
         <l-marker
-            id="newMarker"
-            @dragend="dragEndNewMarker"
+            id="editMarker"
+            @dragend="editMarker"
             :draggable="true"
             :lat-lng="[editStore.newLocation.position.lat, editStore.newLocation.position.lng]" 
             v-if="movieMapStore.mode == 'edit'"
+            :options="{icon: defaultIcon}"
           />
         <l-marker
           v-for="(location, id) in movieMapStore.locations"
@@ -148,7 +162,7 @@
           :draggable="false"
           @click="clickLocationMarker(id)"
         >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
         </l-marker>
         <l-marker
           v-for="(location, id) in movieMapStore.locations"
@@ -156,8 +170,9 @@
           :lat-lng="[location.lat,location.lng-360]"
           :draggable="false"
           @click="clickLocationMarker(id)"
+          
         >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
         </l-marker>
         <l-marker
           v-for="(location, id) in movieMapStore.locations"
@@ -166,7 +181,7 @@
           :draggable="false"
           @click="clickLocationMarker(id)"
         >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="(location.main_img_path) || (movieMapStore.placeholderStill)"></l-tooltip>
+          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
         </l-marker>
         <l-control-zoom position="bottomright" zoom-in-text="+" zoom-out-text="-" />
       </l-map>
