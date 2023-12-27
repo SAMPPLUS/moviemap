@@ -34,9 +34,11 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     const releaseYear =  computed<string>(() => filmDetails.value?.release_date ? filmDetails.value.release_date.substring(0,4) : "")
 
     const movieLocationMisatch = computed<boolean>(() => {
-        if((!filmDetails.value) || (Object.keys(locations.value).length == 0)) return false
-        if(filmDetails.value.id != locations.value[0].movie_id) return true
         return false
+        // if(locFetchingStatus.value != 'success') return false
+        // if((!filmDetails.value) || (Object.keys(locations.value).length == 0)) return false
+        // if(filmDetails.value.id != locations.value[0].movie_id) return true
+        // return false
     })
 
     const selectedLocation = computed<Location|null>(() => {

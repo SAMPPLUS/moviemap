@@ -38,8 +38,8 @@ const insertMovie = async (vals : movieInsValues) => {
 
 
 type position = {lat: number, lng: number}
-interface locValues { movie_id: number; title: string; position: position; description: string; main_img_path?: string };
-
+interface locValues { movie_id: number; title: string; position: position; description: string; main_img_path?: string, id?: number };
+type updLocValues = Omit<locValues, 'movie_id'>
 interface imageValues {id: number; description: string; type: number; location_id?: string}
 type imageIns =Omit<imageValues, 'id'>
 const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
@@ -81,6 +81,24 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
 
 }
 
+const updateLocation = async (locVals: updLocValues) => {
+    var id = locVals.id;
+    if(!id){
+        throw new Error('missing location id, cannot update');
+    }
+    var locIns = {
+        title: locVals.title,
+        description: locVals.description,
+        geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
+    };
+
+    return sql`
+    update locations set
+    ${sql(locIns)}
+    where locations.id=${id}
+    `
+}
+
 const updateLocationImage = async (vals: imageValues) => {
     return sql`
     update locationimages set
@@ -113,6 +131,7 @@ export default {
     hasMovie,
     insertMovie,
     insertLocation,
+    updateLocation,
     updateLocationImage,
     getMovieLocations,
     insertImage

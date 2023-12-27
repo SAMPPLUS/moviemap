@@ -15,7 +15,7 @@
 <template>
 <div class="sidebar-comp" id="movie-content">
     <router-view style="overflow-y: auto; background-color: var(--color-background);" name="mainMovieContent"></router-view>
-    <SceneSelector style="margin-top: auto; height: 20%; min-height: 150px; "></SceneSelector>
+    <SceneSelector v-show="false" style="margin-top: auto; height: 20%; min-height: 150px; "></SceneSelector>
 </div>
 
 </template>

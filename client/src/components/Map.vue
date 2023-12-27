@@ -2,7 +2,7 @@
   import "leaflet/dist/leaflet.css";
   import { setMapStoreSuffix, storeToRefs } from "pinia";
   import { LMap, LTileLayer, LControlZoom, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
-  import { onMounted, computed, ref, type Ref, watch } from 'vue';
+  import { onMounted, computed, shallowRef, ref, type Ref, watch } from 'vue';
   import { useMovieMapStore } from "@/stores/MovieMap.store";
   import { useEditLocationStore } from "@/stores/EditLocation.store.js"
   import L, { type LatLngExpression, type LatLngLiteral, LatLngBounds, type PointExpression } from "leaflet"
@@ -26,11 +26,16 @@
   const editStore = useEditLocationStore()
   const zoom : Ref<number> = ref(props.startzoom || 4)
 
+  const modifyingId = ref(editStore.modifyingLocation.id)
+
+  const {locations, selectedLocationIdx, mode} = storeToRefs(movieMapStore)
+
   const icon  = new  L.Icon.Default()
   icon.options.iconSize = [50,82]
-  console.log(icon)
+  icon.options.iconAnchor = [26, 81]
 
-  const defaultIcon = ref<L.Icon>(icon as L.Icon)
+  const editIcon = ref<L.Icon>(icon as L.Icon)
+
 
   
   const startActionSubscribe = () => {
@@ -49,13 +54,13 @@
   
   const mapClick = (e : Event) => {
     if((movieMapStore.mode == 'edit') && 'latlng' in e){
-      editStore.newLocation.position = e.latlng as L.LatLng
+      editStore.modifyingLocation.position = e.latlng as L.LatLng
     }
 
   }
   const editMarker = (e: Event) => {
     //TODO: This function shouldn't be necessary, position not updating as expected on drag
-    if((e.target) && ('_latlng' in e.target)) editStore.newLocation.position = e.target._latlng as L.LatLng
+    if((e.target) && ('_latlng' in e.target)) editStore.modifyingLocation.position = e.target._latlng as L.LatLng
   }
 
   const ZoomToBounds = async () => {
@@ -79,7 +84,12 @@
     mapQueuedAction.value = action
   }
 
-  const {locations, selectedLocationIdx} = storeToRefs(movieMapStore)
+  const notEditing = ref((location: Location) => {
+    if((movieMapStore.mode !='edit' || !editStore.modifyingLocation.id)) return true
+    return editStore.modifyingLocation.id != Number(location.id)
+  })
+
+
 
   watch(locations, (newLocations, oldLocations) => {
     if(Object.keys(newLocations).length==0) return
@@ -105,7 +115,7 @@
         return IMG_PATH + location.scene_img
     }
     else return (location.main_img_path) || (movieMapStore.placeholderStill)
-}
+  }
 
   movieMapStore.$onAction(
         ({
@@ -151,38 +161,44 @@
             id="editMarker"
             @dragend="editMarker"
             :draggable="true"
-            :lat-lng="[editStore.newLocation.position.lat, editStore.newLocation.position.lng]" 
+            :lat-lng="[editStore.modifyingLocation.position.lat, editStore.modifyingLocation.position.lng]" 
             v-if="movieMapStore.mode == 'edit'"
-            :options="{icon: defaultIcon}"
+            :options="{icon: editIcon}"
           />
-        <l-marker
-          v-for="(location, id) in movieMapStore.locations"
-          :key="id"
-          :lat-lng="[location.lat,location.lng]"
-          :draggable="false"
-          @click="clickLocationMarker(id)"
-        >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
-        </l-marker>
-        <l-marker
-          v-for="(location, id) in movieMapStore.locations"
-          :key="id"
-          :lat-lng="[location.lat,location.lng-360]"
-          :draggable="false"
-          @click="clickLocationMarker(id)"
-          
-        >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
-        </l-marker>
-        <l-marker
-          v-for="(location, id) in movieMapStore.locations"
-          :key="id"
-          :lat-lng="[location.lat,location.lng+360]"
-          :draggable="false"
-          @click="clickLocationMarker(id)"
-        >
-          <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
-        </l-marker>
+        <div class="markers"  v-for="(location, id) in movieMapStore.locations">
+          <div class="marker-group"  >
+            <l-marker
+              :key="id"
+              :lat-lng="[location.lat,location.lng]"
+              :draggable="false"
+              :visible="notEditing(location)"
+              @click="clickLocationMarker(id)"
+            >
+              <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
+            </l-marker>
+            <l-marker
+              
+              :key="id"
+              :lat-lng="[location.lat,location.lng-360]"
+              :draggable="false"
+              :visible="notEditing(location)"
+
+              @click="clickLocationMarker(id)"
+            >
+              <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
+            </l-marker>
+            <l-marker
+              :key="id"
+              :lat-lng="[location.lat,location.lng+360]"
+              :draggable="false"
+              :visible="notEditing(location)"
+
+              @click="clickLocationMarker(id)"
+              >
+              <l-tooltip :options="{opacity: 1}"><img class="tt-image" :src="getSceneImgPath(location)"></l-tooltip>
+            </l-marker>
+          </div>
+        </div>
         <l-control-zoom position="bottomright" zoom-in-text="+" zoom-out-text="-" />
       </l-map>
     </div>
@@ -195,4 +211,4 @@
 .tt-image {
   max-width: 200px;
 }
-</style>@/stores/NewLocation.store@/stores/EditLocation.store.js
+</style>

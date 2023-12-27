@@ -24,3 +24,25 @@ export interface locationReq {
     title: string;
   };
 }
+
+export interface updlocationReq {
+  /**
+   * Unknown Property
+   */
+  [x: string]: unknown;
+  images?: ({
+    description: string;
+    id: number;
+    main?: boolean;
+    type: 1 | 2;
+  })[];
+  location: {
+    description: string;
+    id: number;
+    position: {
+      lat: number;
+      lng: number;
+    };
+    title: string;
+  };
+}

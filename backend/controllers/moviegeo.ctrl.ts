@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import moviegeoDb from '../db/moviegeo.db';
 import tmdbUtil from '../util/tmdb.util';
 import { ValueRequest } from '../interfaces/request.intrf';
-import { locationReq } from '../interfaces/requests';
+import { locationReq, updlocationReq } from '../interfaces/requests';
 const img_url = "https://image.tmdb.org/t/p/original"
 
 
@@ -54,6 +54,20 @@ const addLocation = async (req : ValueRequest<locationReq>, res : Response) => {
     if(!insertResult || insertResult.length != 1 || !('id' in insertResult[0])){
         res.status(500).json({message: 'Location Insert Error'})
     }
+    res.status(200).json({'message': 'added successfully'})
+}
+
+const updateLocation = async(req: ValueRequest<updlocationReq>, res : Response) => {
+    if(!req.value){
+        res.status(500).json({message: 'error validating request'})
+        return 
+    }
+    var updateResult = await moviegeoDb.updateLocation(req.value.location).then((result: any) => {
+        res.status(200).json({message: 'updated successfully'})
+    })
+    .catch((error:Error) => {
+        res.status(500).json({'message': 'unable to update location'})
+    })
 }
 
 const movieGet= async (req : Request , res : Response) => {
@@ -124,6 +138,7 @@ const imgUpload = async (req: Request, res : Response) => {
 export default {
     addMovie,
     addLocation,
+    updateLocation,
     movieGet,
     movieGetTMDB,
     movieLocationsGet,

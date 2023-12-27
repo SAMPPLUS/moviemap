@@ -19,6 +19,8 @@ movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 
 movieGeoRouter.post('/linsert', validate(schema.lInsertSchema),moviegeoCtrl.addLocation);
 
+movieGeoRouter.post('/lupdate',validate(schema.lUpdateSchema), moviegeoCtrl.updateLocation )
+
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet);
 
 //movieGeoRouter.get('/')

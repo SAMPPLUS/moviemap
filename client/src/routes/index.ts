@@ -34,6 +34,13 @@ const routes : RouteRecordRaw[]= [
                         components: {
                             mainMovieContent: EditLocations
                         }
+                    },
+                    {
+                        path: ':edit_loc_id(\\d+)',
+                        name: 'editLocation',
+                        components: {
+                            mainMovieContent: EditLocations
+                        }
                     }
                 ]
             },

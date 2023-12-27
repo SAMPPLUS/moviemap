@@ -5,16 +5,18 @@ import L from "leaflet"
 import {type imageObject } from "@/interfaces/edit.int"
 import { useMovieMapStore } from "./MovieMap.store"
 import { type apiStatus } from "@/types/types"
+import {type locFormData} from "@/types/moviegeo.types"
 export const useEditLocationStore = defineStore('editlocations', () => {
 
     const MMStore = useMovieMapStore();
 
     //STATE
 
+    const mode = ref<'new'|'edit'>('new')
+
     const saveStatus = ref<apiStatus>('unattempted')
 
-    interface locFormData  {position : L.LatLng; title: string; description: string; movie_id?: string}
-    const newLocation = ref<locFormData>({ position: new L.LatLng(47.457809,-1.571045), title: '', description: '' })
+    const modifyingLocation = ref<locFormData>({ position: new L.LatLng(44.45,-20.56), title: '', description: '' })
 
     
     const sceneImages = ref<imageObject[]>([])
@@ -23,7 +25,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
     const imgCounter = ref<number>(0)
 
     //GETTER
-    const wrappedNewLocation = computed<L.LatLng>(() => newLocation.value.position.wrap())
+    const wrappedNewLocation = computed<L.LatLng>(() => modifyingLocation.value.position.wrap())
 
     //ACTION
 
@@ -42,9 +44,9 @@ export const useEditLocationStore = defineStore('editlocations', () => {
 
     const postNewLocation = async () => {
       if(!MMStore.filmDetails) return;
-      newLocation.value.movie_id = MMStore.filmDetails.id as string
+      modifyingLocation.value.movie_id = MMStore.filmDetails.id as string
 
-      var locData  = newLocation.value as Required<locFormData>
+      var locData  = modifyingLocation.value as Required<locFormData>
       
       await axios.post('/api/moviegeo/linsert', {
           location: locData,
@@ -67,5 +69,5 @@ export const useEditLocationStore = defineStore('editlocations', () => {
 
     }
 
-    return {saveStatus, newLocation, sceneImages, locationImages, wrappedNewLocation, appendImageField, postNewLocation, setMainImage}
+    return {mode, saveStatus, modifyingLocation, sceneImages, locationImages, wrappedNewLocation, appendImageField, postNewLocation, setMainImage}
 })

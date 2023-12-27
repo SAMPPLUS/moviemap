@@ -2,19 +2,57 @@
     import ImageUploader from './ImageUploader.vue'
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useEditLocationStore } from '@/stores/EditLocation.store';
-    import { ref, onBeforeMount} from 'vue';
+    import { ref, onBeforeMount, watch} from 'vue';
     import { useRoute } from 'vue-router';
+    import { storeToRefs } from 'pinia';
+    import {type locFormData} from "@/types/moviegeo.types"
+    import { type apiStatus } from '@/types/types';
+    import L from 'leaflet'
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
-
+    const route = useRoute();
     movieMapStore.setMode('edit')
+    const blankLoc = { position: new L.LatLng(47.457809,-1.571045), title: '', description: '' }
+    const {locFetchingStatus} = storeToRefs(movieMapStore)
+    
+    const setEditLocation = (id : number) => {
+        if(!(id in movieMapStore.locations)) return
+        const target = movieMapStore.locations[id]
+        var editData : locFormData = {
+            id: id,
+            position: new L.LatLng(target.lat, target.lng),
+            title: target.title,
+            description: target.description
+        }
+        editStore.modifyingLocation = editData
+    }
 
+    const setBlankLocation = () => {
+        
+    }
+
+    //route setup
+
+    if(route.name == 'editLocation') {
+        editStore.mode='edit';
+    }
+    else{
+        editStore.mode = 'new'
+    }
+    console.log(route.params.edit_loc_id)
     onBeforeMount(() => {
         editStore.appendImageField(1, true);
         editStore.appendImageField(2, true);
     })
 
+    watch(locFetchingStatus, (newStatus : apiStatus) => {
+        if (newStatus == 'success'){
+            if(editStore.mode == 'new') return
+            setEditLocation(Number(route.params.edit_loc_id))
+        }
+    }, {immediate: true})
     
+    //
 
     const imageFile = ref<File>()
 
@@ -24,11 +62,11 @@
         var val : number = Number((e.target as HTMLTextAreaElement).value)
         if(type == 'lat'){
             //val = Math.min(Math.max(val, -90), 90)
-            editStore.newLocation.position.lat = val
+            editStore.modifyingLocation.position.lat = val
         }
         else{
             //val = Math.min(Math.max(val, -180), 180)
-            editStore.newLocation.position.lng = val
+            editStore.modifyingLocation.position.lng = val
         }
     }
 
@@ -58,14 +96,14 @@
         <div id="location-form">
             <h1>New Location</h1>
             <div class="edit-row">
-                <input type="text" v-model="editStore.newLocation.title" placeholder="title">
+                <input type="text" v-model="editStore.modifyingLocation.title" placeholder="title">
             </div>
             <div class="edit-row" id="latlng-row">
                 <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1">
                 <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1">
             </div>
             <div class="edit-row">
-                <textarea v-model="editStore.newLocation.description" spellcheck="true" placeholder="description"></textarea>
+                <textarea v-model="editStore.modifyingLocation.description" spellcheck="true" placeholder="description"></textarea>
             </div>
 
             <h2>Scene Images</h2>
