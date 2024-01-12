@@ -38,18 +38,19 @@ const insertMovie = async (vals : movieInsValues) => {
 
 
 type position = {lat: number, lng: number}
-interface locValues { movie_id: number; title: string; position: position; description: string; main_img_path?: string, id?: number };
-type updLocValues = Omit<locValues, 'movie_id'>
-interface imageValues {id: number; description: string; type: number; location_id?: string}
+interface locValues { movie_id: number; title: string; position: position; scene_desc: string; location_desc: string, main_img_path?: string, id?: number };
+type updLocValues = Partial<locValues> & {id: number}
+interface imageValues {id: number; description: string; type: number; location_id?: number; status?: 'new'|'update'}
+type updImageValues = Partial<imageValues> & {id: number}
 type imageIns =Omit<imageValues, 'id'>
 const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
     var locIns = {
         movie_id: locVals.movie_id,
         title: locVals.title,
-        description: locVals.description,
+        scene_desc: locVals.scene_desc,
+        location_desc: locVals.location_desc,
         geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
     };
-    console.log(locIns)
 
     return sql.begin('read write', async sql => {
         const [location] = await sql`
@@ -61,7 +62,8 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
 
         imgVals.forEach((element : imageValues) => {
             
-            element['location_id'] = location.id;
+            element['location_id'] = Number(location.id);
+            delete element.status
             imageQueries.push(sql.savepoint(sql => sql`
             update locationimages set
             ${sql(element as imageIns)}
@@ -81,22 +83,48 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
 
 }
 
-const updateLocation = async (locVals: updLocValues) => {
-    var id = locVals.id;
+const updateLocation = async (locVals: updLocValues, imgVals : updImageValues[]) => {
+    var id = Number(locVals.id);
     if(!id){
         throw new Error('missing location id, cannot update');
     }
-    var locIns = {
+    var locIns : any = {
         title: locVals.title,
-        description: locVals.description,
-        geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
-    };
+        scene_desc: locVals.scene_desc,
+        location_desc: locVals.location_desc,
+    }; 
 
-    return sql`
-    update locations set
-    ${sql(locIns)}
-    where locations.id=${id}
-    `
+    if (locVals.position){
+        locIns.geo = `POINT(${locVals.position.lng} ${locVals.position.lat})`
+    }
+        
+
+    return sql.begin('read write', async sql => {
+        var queries : Array<Promise<Row>> = []
+        var location : any = sql`
+        update locations set
+        ${sql(locIns)}
+        where locations.id=${id}
+        `
+        queries.push(location)
+        
+
+        imgVals.forEach((element: updImageValues) => {
+            if(element.status == 'new') element.location_id = id
+            delete element.status;
+            queries.push(sql.savepoint(sql => sql`
+            update locationimages set
+            ${sql(element as imageIns)}
+            where 
+            id=${element.id}
+            returning id
+            `))
+        })
+
+        await Promise.all(queries)
+
+    })
+
 }
 
 const updateLocationImage = async (vals: imageValues) => {
@@ -113,6 +141,13 @@ const getMovieLocations = async (movie_id : string ) => {
     left join locationimages as li1 on li1.location_id=locations.id and li1.main=true and li1.type=1
     left join locationimages as li2 on li2.location_id=locations.id and li2.main=true and li2.type=2
     where locations.movie_id=${movie_id}`
+}
+
+const getLocationImages = async (location_id : number) => {
+    return sql`
+    select *
+     from locationimages
+     where location_id=${location_id}`
 }
 
 const insertImage = async (fileName : string) => {
@@ -134,5 +169,6 @@ export default {
     updateLocation,
     updateLocationImage,
     getMovieLocations,
+    getLocationImages,
     insertImage
 }

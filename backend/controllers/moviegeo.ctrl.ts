@@ -62,10 +62,11 @@ const updateLocation = async(req: ValueRequest<updlocationReq>, res : Response) 
         res.status(500).json({message: 'error validating request'})
         return 
     }
-    var updateResult = await moviegeoDb.updateLocation(req.value.location).then((result: any) => {
+    var updateResult = await moviegeoDb.updateLocation(req.value.location, req.value.images).then((result: any) => {
         res.status(200).json({message: 'updated successfully'})
     })
     .catch((error:Error) => {
+        console.log(error)
         res.status(500).json({'message': 'unable to update location'})
     })
 }
@@ -120,6 +121,19 @@ const movieLocationsGet = async (req : Request, res : Response) => {
     })
 }
 
+const locationImagesGet = async (req : Request, res: Response) => {
+    if(Number.isNaN(req.query.location_id)){
+        res.status(401).json({message: 'missing or invalid location_id'})
+        return
+    }
+    let location_id = Number(req.query.location_id)
+    moviegeoDb.getLocationImages(location_id).then((ret) => {
+        res.status(200).json(ret)
+    }).catch((error: Error) => {
+        res.status(500).json({message: 'could not fetch images'})
+    })
+}
+
 const imgUpload = async (req: Request, res : Response) => {
     if(!req.file) {
         res.status(401).json({message: 'missing file'});
@@ -142,5 +156,6 @@ export default {
     movieGet,
     movieGetTMDB,
     movieLocationsGet,
+    locationImagesGet,
     imgUpload
   }

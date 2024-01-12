@@ -15,12 +15,13 @@ export interface locationReq {
     type: 1 | 2;
   })[];
   location: {
-    description: string;
+    location_desc: string;
     movie_id: number;
     position: {
       lat: number;
       lng: number;
     };
+    scene_desc: string;
     title: string;
   };
 }
@@ -30,19 +31,21 @@ export interface updlocationReq {
    * Unknown Property
    */
   [x: string]: unknown;
-  images?: ({
-    description: string;
+  images: ({
+    description?: string;
     id: number;
     main?: boolean;
-    type: 1 | 2;
+    status: 'update' | 'new';
+    type?: 1 | 2;
   })[];
   location: {
-    description: string;
     id: number;
-    position: {
+    location_desc?: string;
+    position?: {
       lat: number;
       lng: number;
     };
-    title: string;
+    scene_desc?: string;
+    title?: string;
   };
 }
