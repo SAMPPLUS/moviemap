@@ -20,12 +20,12 @@ const fetchMovie = async (id: string) => {
     })
 }
 
-const fetchLocations = async(id: string) => {
+const fetchLocations = async(movie_id: string) => {
     var movieMapStore = useMovieMapStore()
     movieMapStore.locFetchingStatus = 'inprogress'
     await axios.get('/api/moviegeo/mlocget', {
         params: {
-            movie_id: id
+            movie_id: movie_id
         }
     }).then((l) => {
         movieMapStore.locations = l.data
@@ -37,5 +37,13 @@ const fetchLocations = async(id: string) => {
     })
 }
 
+const fetchLocationImages = async(location_id: number) => {
+    return axios.get('/api/moviegeo/limgget', {
+        params: {
+            location_id: location_id
+        }
+    })
+}
 
-export default {fetchMovie, fetchLocations}
+
+export default {fetchMovie, fetchLocations, fetchLocationImages}

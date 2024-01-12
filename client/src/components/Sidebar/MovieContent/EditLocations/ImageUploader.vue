@@ -1,8 +1,11 @@
 <script setup lang="ts">
     import { ref} from 'vue';
     import axios from 'axios';
-    import { useEditLocationStore } from '@/stores/EditLocation.store';
+    import { useEditLocationStore } from '@/stores/EditLocation.store'
     import {type imageObject } from "@/interfaces/edit.int"
+    import { storeToRefs } from 'pinia';
+    import { IMG_PATH } from '@/util/const';
+
 
     const previewImage = ref()
     const emit =defineEmits(['newImage', 'delete'])
@@ -13,6 +16,7 @@
         imageObject: imageObject,
         type: (1|2)
     }>()
+    const {waiting} = storeToRefs(editStore)
 
     const imgGroup = ref()
 
@@ -24,7 +28,10 @@
     }
 
     const thisImage = ref<imageObject>(props.imageObject)
-
+    // if(thisImage.value.file){
+    //     console.log(thisImage.value.file)
+    //     previewImage.value=thisImage.value.file
+    // }
 
     const uploadImage = async (e: Event) => {
         delete thisImage.value.id
@@ -59,21 +66,22 @@
     <div class="image-upload">
         <div class="upload-content">
             <div class="upload-frame">
-                <img :src="previewImage" class="uploading-image" />
+                <img :src="IMG_PATH + thisImage.file_name" class="uploading-image" v-if="thisImage.status=='update'">
+                <img :src="previewImage" class="uploading-image" v-else="thisImage.status=='new'"  />
             </div>
             <div class="image-data">
-                <div class="delete-row"> <button @click="$emit('delete')">delete</button></div>
+                <div class="delete-row"> <button @click="$emit('delete')" :disabled="waiting" v-if="thisImage.status=='new'">delete</button></div>
                 <div class="image-metadata">
-                    <textarea maxlength="140" placeholder="caption" v-model="thisImage.description"></textarea>
+                    <textarea maxlength="140" placeholder="caption" v-model="thisImage.description" :disabled="waiting"></textarea>
                     <div class="image-options">
-                        <input type="checkbox"  name="main" :checked="thisImage.main" :disabled="thisImage.main" @click="$event => editStore.setMainImage($event, props.type, thisImage)">
+                        <input type="checkbox"  name="main" :checked="thisImage.main" :disabled="thisImage.main || waiting" @click="$event => editStore.setMainImage($event, props.type, thisImage)" >
                         <label for="main"> Main </label>
                     </div>
                 </div>
             </div>
         </div>
         <div >
-            <input type="file" accept="image/jpeg" @change=uploadImage>
+            <input type="file" accept="image/jpeg" v-if="thisImage.status == 'new'" @change=uploadImage  :disabled="waiting">
         </div>
     </div>
  </template>

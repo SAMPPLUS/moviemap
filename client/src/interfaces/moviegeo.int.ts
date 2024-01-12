@@ -13,7 +13,7 @@ export interface locationimages {
 export interface location {
     id: string;
     movie_id: string;
-    description: string;
+    scene_desc: string;
     lat: number;
     lng: number;
     title?: string

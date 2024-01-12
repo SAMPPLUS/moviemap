@@ -2,29 +2,53 @@
     import ImageUploader from './ImageUploader.vue'
     import { useMovieMapStore } from '@/stores/MovieMap.store';
     import { useEditLocationStore } from '@/stores/EditLocation.store';
-    import { ref, onBeforeMount, watch} from 'vue';
+    import {type imageObject } from "@/interfaces/edit.int"
+
+    import { ref, onBeforeMount, watch, computed} from 'vue';
     import { useRoute } from 'vue-router';
     import { storeToRefs } from 'pinia';
     import {type locFormData} from "@/types/moviegeo.types"
-    import { type apiStatus } from '@/types/types';
+    import { type apiStatus } from '@/types/types'
+    import { type Location } from "@/types/moviegeo.types"
+    import movieGeoService from '@/api/movieGeoService';
     import L from 'leaflet'
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
     const route = useRoute();
     movieMapStore.setMode('edit')
-    const blankLoc = { position: new L.LatLng(47.457809,-1.571045), title: '', description: '' }
+    const blankLoc = { position: new L.LatLng(47.457809,-1.571045), title: '', scene_desc: '' }
     const {locFetchingStatus} = storeToRefs(movieMapStore)
+    const {waiting} = storeToRefs(editStore)
+    
+
+    const changed = computed<boolean>(() => {
+        return true
+    })
+
     
     const setEditLocation = (id : number) => {
         if(!(id in movieMapStore.locations)) return
+        waiting.value = false
         const target = movieMapStore.locations[id]
         var editData : locFormData = {
             id: id,
             position: new L.LatLng(target.lat, target.lng),
             title: target.title,
-            description: target.description
+            scene_desc: target.scene_desc,
+            location_desc: target.location_desc
         }
+        editStore.locOriginalVals = target;
         editStore.modifyingLocation = editData
+        movieGeoService.fetchLocationImages(Number(id)).then((data : any) => {
+            (data.data as imageObject[]).forEach((el : any) => {
+                el.status = 'update'
+            });
+            editStore.sceneImages = data.data.filter((img : any) => img.type==1)
+            editStore.locationImages = data.data.filter((img : any) => img.type==2)
+        })
+        .catch((error : Error) => {
+            console.log(error)
+        })
     }
 
     const setBlankLocation = () => {
@@ -39,7 +63,7 @@
     else{
         editStore.mode = 'new'
     }
-    console.log(route.params.edit_loc_id)
+    //console.log(route.params.edit_loc_id)
     onBeforeMount(() => {
         editStore.appendImageField(1, true);
         editStore.appendImageField(2, true);
@@ -70,6 +94,13 @@
         }
     }
 
+    const revertLoc = () => {
+        if(!editStore.locOriginalVals) return
+        editStore.modifyingLocation.position.lat = editStore.locOriginalVals.lat
+        editStore.modifyingLocation.position.lng = editStore.locOriginalVals.lng
+
+    }
+
     const deleteImgObject = (type: (1|2), index : number) => {
         var imageGroup
         if(type==1) imageGroup = editStore.sceneImages 
@@ -81,12 +112,20 @@
 
     }
 
-    const submit = () => {
+    const submitNew = () => {
         console.log('submit')
-        if(!imageFile.value){
-            //return
-        }
-        editStore.postNewLocation()
+        waiting.value=true
+        editStore.postNewLocation().finally(() => {
+            waiting.value = false
+        })
+    }
+
+    const submitUpdate = () => {
+        console.log('update')
+        waiting.value = true
+        editStore.postUpdateLocation().finally(() => {
+            waiting.value = false
+        })
     }
     
 
@@ -96,29 +135,35 @@
         <div id="location-form">
             <h1>New Location</h1>
             <div class="edit-row">
-                <input type="text" v-model="editStore.modifyingLocation.title" placeholder="title">
+                <input type="text" v-model="editStore.modifyingLocation.title" placeholder="title" :disabled="waiting">
             </div>
-            <div class="edit-row" id="latlng-row">
-                <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1">
-                <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1">
+            <div class="edit-row" id="latlng-row" >
+                <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1" :disabled="waiting">
+                <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1" :disabled="waiting">
+                <input type="button" value="revert" @click="revertLoc" v-if="editStore.mode=='edit'" :disabled="waiting">
             </div>
             <div class="edit-row">
-                <textarea v-model="editStore.modifyingLocation.description" spellcheck="true" placeholder="description"></textarea>
+                <textarea v-model="editStore.modifyingLocation.scene_desc" spellcheck="true" placeholder="Scene Description" :disabled="waiting"></textarea>
+            </div>
+            <div class="edit-row">
+                <textarea v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
             </div>
 
             <h2>Scene Images</h2>
             
             <ImageUploader v-for="(image,index) in editStore.sceneImages" :key="image.key" @new-image="" @delete="deleteImgObject(1, index)" :image-object="image" :index="index" :type="1"/>
             <div class="add-row">
-                <button @click="editStore.appendImageField(1,false)">+</button>
+                <button @click="editStore.appendImageField(1,false)" :disabled="waiting">+</button>
             </div>
             <h2>Location Images</h2>
 
             <ImageUploader v-for="(image,index) in editStore.locationImages" :key="image.key" @new-image="" @delete="deleteImgObject(2, index)" :image-object="image" :index="index" :type="2"/>
             <div class="add-row">
-                <button @click="editStore.appendImageField(2,false)">+</button>
+                <button @click="editStore.appendImageField(2,false)" :disabled="waiting">+</button>
             </div>
-            <button @click="submit" > SUBMIT</button>
+            <button @click="submitNew" v-if="editStore.mode=='new'" :disabled="waiting">SUBMIT</button>
+            <button @click="submitUpdate" v-if="editStore.mode=='edit'" :disabled="waiting">SAVE CHANGES</button>
+
         </div>
     </div>
 </template>
