@@ -40,20 +40,14 @@ const store = useModalStore();</script>
   width: 100vw;
   height: 100vh;
 
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, 0.6);
 
   display: grid;
   place-items: center;
 }
 
 .modal {
-    background-color: white;
-    padding: 2rem;
-    color: black;
-    border-radius: 1rem;
-  
-    display: flex;
-    flex-direction: column;
-    gap: 1.4rem;
+    max-height: 90vh;
+    max-width: 90vw;
   }
 </style>

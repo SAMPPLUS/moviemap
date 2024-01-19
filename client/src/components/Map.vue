@@ -1,7 +1,7 @@
 <script setup lang="ts">
   import "leaflet/dist/leaflet.css";
   import { setMapStoreSuffix, storeToRefs } from "pinia";
-  import { LMap, LTileLayer, LControlZoom, LMarker, LTooltip } from "@vue-leaflet/vue-leaflet";
+  import { LMap, LTileLayer, LControlZoom, LMarker, LTooltip, LControl } from "@vue-leaflet/vue-leaflet";
   import { onMounted, computed, shallowRef, ref, type Ref, watch } from 'vue';
   import { useMovieMapStore } from "@/stores/MovieMap.store";
   import { useEditLocationStore } from "@/stores/EditLocation.store.js"
@@ -200,11 +200,33 @@
           </div>
         </div>
         <l-control-zoom position="bottomright" zoom-in-text="+" zoom-out-text="-" />
+        <l-control position="bottomright" class="map-control">
+          <button href="#" class="map-control-btn" @click="ZoomToBounds"> 
+            <img alt="Vue logo" class="logo" src="@/assets/icons/position.svg" width="24" height="24" />
+          </button>
+        </l-control>
       </l-map>
     </div>
   </div>
 </template> 
-<style>
+<style scoped>
+
+.map-control {
+  border: 2px solid rgb(164, 164, 164);
+  border-radius: 4px;
+}
+.map-control-btn {
+  width: 30px;
+  height:30px;
+  border: 0;
+  background-color: white;
+  padding:  1px;
+  cursor: pointer;
+}
+
+.map-control-btn:hover {
+  background-color: rgb(245, 245, 245);
+}
 .map-zone {
   width: 100%;
   height: 100%;

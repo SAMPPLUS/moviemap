@@ -13,7 +13,7 @@ export interface IModalProps {
 
 export const useModalStore = defineStore('modal', () => {
     const component = ref<VueComponent>(null)
-    const props = ref({})
+    const props = ref<any>({})
 
     const openModal = (payload : IModalProps) => {
         const { props : prop, component : comp } = payload;

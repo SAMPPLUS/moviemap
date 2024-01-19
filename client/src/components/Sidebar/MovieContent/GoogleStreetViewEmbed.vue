@@ -5,12 +5,18 @@ const props = defineProps({url: String})
 </script>
 
 <template>
-    <div class="h_iframe" v-if="props.url">
-        <iframe :src="props.url" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <div class="streetview-container">
+        <div class="h_iframe" v-if="props.url">
+            <iframe :src="props.url" style="border:0;" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
     </div>
 </template>
 
 <style>
+.streetview-container {
+    padding: 18px;
+}
+
 .h_iframe iframe {
     width:100%;
     height:100%;

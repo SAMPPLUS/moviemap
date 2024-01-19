@@ -1,6 +1,6 @@
 <script setup lang="ts">
     import { ref} from 'vue';
-    import axios from 'axios';
+    import moviegeo_axios from '@/api/movieGeoAxios';
     import { useEditLocationStore } from '@/stores/EditLocation.store'
     import {type imageObject } from "@/interfaces/edit.int"
     import { storeToRefs } from 'pinia';
@@ -46,7 +46,7 @@
 
         let fd = new FormData();
         fd.append('image', image)
-        await axios.post('/api/moviegeo/imgupload', fd).then((ret) => {
+        await moviegeo_axios.post('/api/moviegeo/imgupload', fd).then((ret) => {
             if(ret.data.id){
                 thisImage.value.id = ret.data.id
             }

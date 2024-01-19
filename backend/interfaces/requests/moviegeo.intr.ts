@@ -15,6 +15,7 @@ export interface locationReq {
     type: 1 | 2;
   })[];
   location: {
+    g_streetview_embed_url?: string;
     location_desc: string;
     movie_id: number;
     position: {
@@ -39,6 +40,7 @@ export interface updlocationReq {
     type?: 1 | 2;
   })[];
   location: {
+    g_streetview_embed_url?: string;
     id: number;
     location_desc?: string;
     position?: {

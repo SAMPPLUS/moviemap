@@ -1,6 +1,6 @@
 import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
-import axios from "axios"
+import moviegeo_axios from "@/api/movieGeoAxios"
 import L from "leaflet"
 import {type imageObject } from "@/interfaces/edit.int"
 import { useMovieMapStore } from "./MovieMap.store"
@@ -54,7 +54,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       var locData = modifyingLocation.value
       console.log(sceneImages.value.filter((img) => Boolean(img.id)).concat(locationImages.value.filter((img) => Boolean(img.id))))
 
-      return axios.post('/api/moviegeo/lupdate', {
+      return moviegeo_axios.post('/api/moviegeo/lupdate', {
         location: locData,
         images: sceneImages.value.filter((img) => Boolean(img.id)).concat(locationImages.value.filter((img) => Boolean(img.id)))
       })
@@ -66,7 +66,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       modifyingLocation.value.movie_id = MMStore.filmDetails.id as string
 
       var locData  = modifyingLocation.value as Required<locFormData>
-      return axios.post('/api/moviegeo/linsert', {
+      return moviegeo_axios.post('/api/moviegeo/linsert', {
           location: locData,
           images: sceneImages.value.concat(locationImages.value)   
       })

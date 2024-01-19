@@ -21,6 +21,8 @@ const auth = useFirebaseAuth();
 
 const modalStore = useModalStore()
 
+//modalStore.openModal({component: LoginModal})
+
 
 
 
@@ -36,6 +38,7 @@ const modalStore = useModalStore()
   </div>
   <Modal/>
 </template>
+
 
 <style scoped>
 header {

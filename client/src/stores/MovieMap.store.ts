@@ -1,6 +1,5 @@
 import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
-import axios from "axios"
 import placeholder from "../../public/images/placeholder-still.jpeg"
 import { useRouter } from 'vue-router';
 import { type Location } from "@/types/moviegeo.types";

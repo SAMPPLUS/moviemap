@@ -4,3 +4,5 @@ dist/
 .vscode/
 build/
 .DS_Store
+admin-keys/
+movie-map-85c8a-firebase-adminsdk-qwwfi-8c89f8339b.json

@@ -30,16 +30,19 @@ const db = getFirestore(firebaseApp)
 
 
 const app = createApp(App)
-app.config.globalProperties.foo = 'bar';
 app.use(VueFire, {
-    // imported above but could also just be created here
-    firebaseApp,
-    modules: [
-      // we will see other modules later on
-      VueFireAuth(),
-    ],
-  })
+  // imported above but could also just be created here
+  firebaseApp,
+  modules: [
+    // we will see other modules later on
+    VueFireAuth(),
+  ],
+})
+
 
 app.use(pinia)
+
+
+
 app.use(router)
 app.mount('#app')

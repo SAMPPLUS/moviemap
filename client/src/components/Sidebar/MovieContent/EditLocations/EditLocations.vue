@@ -135,20 +135,42 @@
         <div id="location-form">
             <h1>New Location</h1>
             <div class="edit-row">
-                <input type="text" v-model="editStore.modifyingLocation.title" placeholder="title" :disabled="waiting">
+                <div>
+                    <label for="title">Title</label>
+                    <input type="text" name="title" v-model="editStore.modifyingLocation.title" placeholder="title" :disabled="waiting">
+                </div>
             </div>
             <div class="edit-row" id="latlng-row" >
-                <input type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1" :disabled="waiting">
-                <input type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1" :disabled="waiting">
-                <input type="button" value="revert" @click="revertLoc" v-if="editStore.mode=='edit'" :disabled="waiting">
+                <div>
+                    <label for="latitude">Latitude</label>
+                    <input name="latitude" type="number" min="-90" max="90"   :value="editStore.wrappedNewLocation.lat" @input="inputLatLng($event,'lat')" step="0.1" :disabled="waiting">
+                </div>
+                <div>
+                    <label for="longitude">Longitude</label>
+                    <input name="longitude" type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1" :disabled="waiting">
+                </div>
+                <div>
+                    <input name="revert-coordinates" type="button" value="revert" @click="revertLoc" v-if="editStore.mode=='edit'" :disabled="waiting">
+                </div>
             </div>
             <div class="edit-row">
-                <textarea v-model="editStore.modifyingLocation.scene_desc" spellcheck="true" placeholder="Scene Description" :disabled="waiting"></textarea>
+                <div>
+                    <label for="scene-description">Scene Description</label>
+                    <textarea name="scene-description" v-model="editStore.modifyingLocation.scene_desc" spellcheck="true" placeholder="Scene Description" :disabled="waiting"></textarea>
+                </div>
             </div>
             <div class="edit-row">
-                <textarea v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
+                <div>
+                    <label for="location-description">Location Description</label>
+                    <textarea name="location-description" v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
+                </div>
             </div>
-
+            <div class="edit-row">
+                <div>
+                    <label for="streetview-url">Google Steetview Embed URL</label>
+                    <input name="streetview-url" type="text" placeholder="URL" spellcheck="false"/>
+                </div> 
+            </div>
             <h2>Scene Images</h2>
             
             <ImageUploader v-for="(image,index) in editStore.sceneImages" :key="image.key" @new-image="" @delete="deleteImgObject(1, index)" :image-object="image" :index="index" :type="1"/>
@@ -195,6 +217,15 @@
     display: flex;
     flex-direction: row;
 }
+
+.edit-row div {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    width:100%;
+}
+
+
 .add-row{
     text-align: right;
 }

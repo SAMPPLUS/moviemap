@@ -7,15 +7,9 @@ import bodyParser from 'body-parser';
 import cron from './scheduled/cron';
 import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
-import { convertFromDirectory } from 'joi-to-typescript';
-
-// convertFromDirectory({
-//   schemaDirectory: './schemas',
-//   typeOutputDirectory: './interfaces/requests',
-//   schemaFileSuffix: '.schema',
-//   interfaceFileSuffix: '.intr',
-//   debug: true
-// })
+import admin, { type ServiceAccount } from 'firebase-admin';
+import {serviceAccount} from './admin-keys/movie-map-firebase-admin'
+import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
 
 declare global {
   namespace Express {
@@ -25,6 +19,10 @@ declare global {
   }
 }
 export {}
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount as ServiceAccount)
+})
 
 // Initialize the express engine
 const app = express();
@@ -36,7 +34,6 @@ app.use(bodyParser.urlencoded({
   }));
 
 const router = Router();
-
 
 
 router.use('/moviegeo', movieGeoRouter);

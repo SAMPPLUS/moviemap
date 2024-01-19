@@ -38,19 +38,22 @@ const insertMovie = async (vals : movieInsValues) => {
 
 
 type position = {lat: number, lng: number}
-interface locValues { movie_id: number; title: string; position: position; scene_desc: string; location_desc: string, main_img_path?: string, id?: number };
+interface locValues { movie_id: number; title: string; position: position; scene_desc: string; location_desc: string, main_img_path?: string, id?: number, g_streetview_embed_url?: string };
 type updLocValues = Partial<locValues> & {id: number}
 interface imageValues {id: number; description: string; type: number; location_id?: number; status?: 'new'|'update'}
 type updImageValues = Partial<imageValues> & {id: number}
 type imageIns =Omit<imageValues, 'id'>
 const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
-    var locIns = {
+    var locIns : any = {
         movie_id: locVals.movie_id,
         title: locVals.title,
         scene_desc: locVals.scene_desc,
         location_desc: locVals.location_desc,
         geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
     };
+    if(locVals.g_streetview_embed_url){
+        locIns.g_streetview_embed_url = locVals.g_streetview_embed_url
+    }
 
     return sql.begin('read write', async sql => {
         const [location] = await sql`
@@ -96,6 +99,10 @@ const updateLocation = async (locVals: updLocValues, imgVals : updImageValues[])
 
     if (locVals.position){
         locIns.geo = `POINT(${locVals.position.lng} ${locVals.position.lat})`
+    }
+
+    if(locVals.g_streetview_embed_url){
+        locIns.g_streetview_embed_url = locVals.g_streetview_embed_url;
     }
         
 

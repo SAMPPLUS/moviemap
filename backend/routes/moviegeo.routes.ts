@@ -5,7 +5,7 @@ import  FileMiddleware  from '../middleware/file.middleware';
 import multer from 'multer';
 import { validate } from '../middleware/validate.middleware';
 import * as schema from '../schemas/moviegeo.schema';
-import { Request, Response } from 'express';
+import checkAuth from '../util/checkauth';
 
 const upload = multer({ dest: 'public/images/uploads' })
 
@@ -13,7 +13,7 @@ var movieGeoRouter = express.Router();
 
 movieGeoRouter.post('/minsert', moviegeoCtrl.addMovie);
 
-movieGeoRouter.get('/mget', moviegeoCtrl.movieGet);
+movieGeoRouter.get('/mget', checkAuth, moviegeoCtrl.movieGet);
 
 movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 

@@ -10,7 +10,8 @@ export const lInsertSchema = joi.object({
         position: joi.object({
             lat: joi.number().min(-90).max(90).required(),
             lng: joi.number().min(-180).max(180).required()
-        }).required()
+        }).required(),
+        g_streetview_embed_url: joi.string()
     }).required(),
     images: joi.array().items(joi.object({
         id: joi.number().required(),
@@ -30,7 +31,8 @@ export const lUpdateSchema = joi.object({
         position: joi.object({
             lat: joi.number().min(-90).max(90).required(),
             lng: joi.number().min(-180).max(180).required()
-        })
+        }),
+        g_streetview_embed_url: joi.string()
     }).required(),
     images: joi.array().items(joi.object({
         id: joi.number().required(),

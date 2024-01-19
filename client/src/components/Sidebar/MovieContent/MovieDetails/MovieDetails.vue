@@ -1,9 +1,13 @@
 <script setup lang="ts">
   import { ref } from 'vue'
   import { useMovieMapStore } from '@/stores/MovieMap.store'
-
+  import { useModalStore } from '@/stores/Modal.store';
+  import PictureModal from '@/components/Modal/inner/PictureModal.vue';
+  import Image from '@/components/Util/Image.vue';
   const store = useMovieMapStore();
+  const modal = useModalStore();
   store.setMode('movie')
+
 
 
 </script>
@@ -11,7 +15,7 @@
 <template>
 <div class="movie-details">
     <div class="frame poster">
-        <img  v-bind:src="store.filmDetails?.poster_path"> 
+        <Image :src="store.filmDetails?.poster_path" :caption="store.filmDetails?.title" expandable/>
     </div>
     <div class="details-container">
         <div class="movie-info">
@@ -27,7 +31,7 @@
             </div>
 
             <div class="overview">
-                <p>{{ store.filmDetails?.overview }}</p>
+                <p class="blog">{{ store.filmDetails?.overview }}</p>
             </div>
         </div>     
     </div>
@@ -37,6 +41,7 @@
 
 <style scoped>
 .movie-details {
+    margin-top: 1rem;
     display: grid;
     grid-template-columns: repeat(6, 1fr);;
     padding: 0 20px 0 20px;
@@ -64,7 +69,7 @@
 .movie-details .header #title {
     max-height: 110px;
     overflow-y: hidden;
-    font-family: crimson;
+    font-family: 'marcellus';
     font-weight: bold;
 }
 
