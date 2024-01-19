@@ -6,6 +6,15 @@ import { locationReq, updlocationReq } from '../interfaces/requests';
 const img_url = "https://image.tmdb.org/t/p/original"
 
 
+const movies = async (req: Request, res: Response) => {
+    moviegeoDb.getMovies().then((data) => {
+        res.status(200).json(data)
+    }).catch((error: Error) => {
+        console.log(error)
+        res.status(500).json({message: 'Unable to fetch movies'})
+    })
+}
+
 const addMovie = async (req : Request, res : Response) => {
     if(typeof req.query.tmdb_id != 'string'){
         res.status(401).json({message: 'missing tmdb_id'})
@@ -28,7 +37,6 @@ const addMovie = async (req : Request, res : Response) => {
             poster_path: img_url + movie_details.poster_path,
             director: movie_details.credits.crew.filter(({job} : {job: string}) => job ==='Director')[0]?.name
     }
-    console.log(insData)
     
     await moviegeoDb.insertMovie(insData).catch( (error:Error) => {
         if(!res.headersSent) {
@@ -148,8 +156,25 @@ const imgUpload = async (req: Request, res : Response) => {
     })
 }
 
+const locationsRandom = async (req : Request, res: Response) => {
+    var count : number = 0;
+    if((!req.params.count)){
+        count = 5;
+    }
+    count = Number(req.params.count);
+    count = Math.min(count, 30);
+
+    moviegeoDb.getRandomLocations(count).then((data) => {
+        res.status(200).json(data)
+    }).catch((e: Error)=> {
+        res.status(500).json({message: 'unable to fetch locations'})
+    })
+
+}
+
 
 export default {
+    movies,
     addMovie,
     addLocation,
     updateLocation,
@@ -157,5 +182,6 @@ export default {
     movieGetTMDB,
     movieLocationsGet,
     locationImagesGet,
-    imgUpload
+    imgUpload,
+    locationsRandom
   }

@@ -3,6 +3,14 @@ import sql  from './db'
 import { Row } from 'postgres';
 import { locationReq } from '../interfaces/requests';
 
+const getMovies = async () => {
+    return sql`
+    select m.*, count(l) as loc_count 
+    from movies m
+    left join locations l on m.id=l.movie_id
+    group by m.id`
+}
+
 const getMovieById = async (id : string) => {
     return sql`
         select *
@@ -166,8 +174,15 @@ const insertImage = async (fileName : string) => {
     `
 }
 
+const getRandomLocations = async (count : number) => {
+    return sql`SELECT * FROM locations
+    ORDER BY random()
+    LIMIT ${count};`
+}
+
 
 export default {
+    getMovies,
     getMovieById,
     getMovieByTMDBId,
     hasMovie,
@@ -177,5 +192,6 @@ export default {
     updateLocationImage,
     getMovieLocations,
     getLocationImages,
-    insertImage
+    insertImage,
+    getRandomLocations
 }

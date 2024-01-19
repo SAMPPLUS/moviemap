@@ -15,7 +15,7 @@
 <template>
 <div class="movie-details">
     <div class="frame poster">
-        <Image :src="store.filmDetails?.poster_path" :caption="store.filmDetails?.title" expandable/>
+        <Image :src="store.filmDetails?.poster_path" :caption="store.filmDetails?.title" external expandable/>
     </div>
     <div class="details-container">
         <div class="movie-info">

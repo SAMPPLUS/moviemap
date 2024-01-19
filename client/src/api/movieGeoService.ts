@@ -1,6 +1,8 @@
 import { useMovieMapStore } from "@/stores/MovieMap.store"
 import moviegeo_axios from "./movieGeoAxios"
 
+
+
 const fetchMovie = async (id: string) => {
     var movieMapStore = useMovieMapStore()
     movieMapStore.movieFetchingStatus= 'inprogress'
@@ -35,6 +37,10 @@ const fetchLocations = async(movie_id: string) => {
     })
 }
 
+const fetchMovieList = async () => {
+    return moviegeo_axios.get('/api/moviegeo/movies')
+}
+
 const fetchLocationImages = async(location_id: number) => {
     return moviegeo_axios.get('/api/moviegeo/limgget', {
         params: {
@@ -44,4 +50,4 @@ const fetchLocationImages = async(location_id: number) => {
 }
 
 
-export default {fetchMovie, fetchLocations, fetchLocationImages}
+export default {fetchMovie, fetchLocations, fetchMovieList, fetchLocationImages}

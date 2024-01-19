@@ -44,6 +44,7 @@
   height: 100vh;
   max-height: 100vh;
   padding: 65px 0px 0 0px;
+  overflow-y: scroll;
 }
 
 </style>
