@@ -1,17 +1,23 @@
 <script setup lang="ts">
     import ImageUploader from './ImageUploader.vue'
-    import { useMovieMapStore } from '@/stores/MovieMap.store';
-    import { useEditLocationStore } from '@/stores/EditLocation.store';
+    import { useMovieMapStore } from '@/stores/MovieMap.store'
+    import { useEditLocationStore } from '@/stores/EditLocation.store'
     import {type imageObject } from "@/interfaces/edit.int"
 
-    import { ref, onBeforeMount, watch, computed} from 'vue';
-    import { useRoute } from 'vue-router';
-    import { storeToRefs } from 'pinia';
+    import { ref, onBeforeMount, watch, computed} from 'vue'
+    import { useRoute } from 'vue-router'
+    import { storeToRefs } from 'pinia'
     import {type locFormData} from "@/types/moviegeo.types"
     import { type apiStatus } from '@/types/types'
     import { type Location } from "@/types/moviegeo.types"
-    import movieGeoService from '@/api/movieGeoService';
+    import movieGeoService from '@/api/movieGeoService'
     import L from 'leaflet'
+    import {XMLParser, } from 'fast-xml-parser';
+
+    import { NomReverseGeocode } from '@/api/geocode'
+import type { AxiosResponse } from 'axios'
+import { parse } from 'path';
+
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
     const route = useRoute();
@@ -19,7 +25,8 @@
     const blankLoc = { position: new L.LatLng(47.457809,-1.571045), title: '', scene_desc: '' }
     const {locFetchingStatus} = storeToRefs(movieMapStore)
     const {waiting} = storeToRefs(editStore)
-    
+    const parser = new XMLParser();
+
 
     const changed = computed<boolean>(() => {
         return true
@@ -101,6 +108,18 @@
 
     }
 
+    const geoCodeReverse = async () => {
+        NomReverseGeocode(editStore.wrappedNewLocation.lat, editStore.wrappedNewLocation.lng)
+        .then((response : AxiosResponse) => {
+            if(response.status != 200) return
+            var obj= parser.parse(response.data)
+            console.log(obj)
+        })
+        .catch((error : Error) => {
+            console.log(error)
+        })
+    }
+
     const deleteImgObject = (type: (1|2), index : number) => {
         var imageGroup
         if(type==1) imageGroup = editStore.sceneImages 
@@ -149,8 +168,13 @@
                     <label for="longitude">Longitude</label>
                     <input name="longitude" type="number"  :value="editStore.wrappedNewLocation.lng" @input="inputLatLng($event, 'lng')" step="0.1" :disabled="waiting">
                 </div>
-                <div>
-                    <input name="revert-coordinates" type="button" value="revert" @click="revertLoc" v-if="editStore.mode=='edit'" :disabled="waiting">
+                <div style="display: flex; flex-direction: row; align-items: end; width: fit-content;">
+                    <button class="icon-btn" name="revert-coordinates" @click="geoCodeReverse" v-if="editStore.mode=='edit'" :disabled="waiting">
+                        <img  src="@/assets/icons/search.svg"/>
+                    </button>
+                    <button class="icon-btn" name="revert-coordinates" @click="revertLoc" v-if="editStore.mode=='edit'" :disabled="waiting">
+                        <img  src="@/assets/icons/undo.svg"/>
+                    </button>
                 </div>
             </div>
             <div class="edit-row">
@@ -228,5 +252,11 @@
 
 .add-row{
     text-align: right;
+}
+
+.icon-btn {
+    width: fit-content;
+    height: fit-content;
+    margin-right: 3px;
 }
 </style>@/stores/EditLocation.store

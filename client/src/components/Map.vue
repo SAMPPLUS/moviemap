@@ -8,6 +8,8 @@
   import L, { type LatLngExpression, type LatLngLiteral, LatLngBounds, type PointExpression } from "leaflet"
   import { type Location } from "@/types/moviegeo.types";
   import { IMG_PATH } from "@/util/const";
+  import Image from "./Util/Image.vue";
+import MovieCard from "./Util/MovieCard.vue";
 
   const props  = defineProps({
   startzoom: Number
@@ -151,7 +153,7 @@
 <template>
   <div class="map-zone">
     <div style="height:100vh; ">
-      <l-map ref="map" v-model:zoom="zoom" @click="mapClick" @ready="mapReady"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2, worldCopyJump: true}">
+      <l-map ref="map" style="z-index: 0;" v-model:zoom="zoom" @click="mapClick" @ready="mapReady"  :use-global-leaflet="false" :center="center"  :options="{zoomControl: false, minZoom: 2, worldCopyJump: true}">
         <l-tile-layer
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           layer-type="base"
@@ -207,10 +209,24 @@
         </l-control>
       </l-map>
     </div>
+    <div class="overlay" v-if="movieMapStore.filmDetails">
+        <MovieCard :film-details="movieMapStore.filmDetails"/>
+    </div>
   </div>
 </template> 
 <style scoped>
 
+
+.overlay {
+  width: 400px;
+  position: absolute;
+  left: 0;
+
+  top: 0;
+  margin: 0 auto;
+  z-index: 2;
+  pointer-events: auto;
+}
 .map-control {
   border: 2px solid rgb(164, 164, 164);
   border-radius: 4px;
@@ -232,6 +248,7 @@
   height: 100%;
   background-color: white;
   z-index: 14;
+  position: relative;
 }
 .tt-image {
   max-width: 200px;
