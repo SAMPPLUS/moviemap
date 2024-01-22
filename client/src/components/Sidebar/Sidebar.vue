@@ -3,8 +3,10 @@
   import { useMovieMapStore } from '@/stores/MovieMap.store'
   import MovieContent from './MovieContent/MovieContent.vue';
   import { useCurrentUser } from 'vuefire';
+  import { useModalStore } from '@/stores/Modal.store';
+  import LoginModal from '../Modal/inner/LoginModal.vue';
   const user = useCurrentUser();
-
+  const modal = useModalStore();
 
   
 </script>
@@ -13,7 +15,10 @@
   <div class="sidebar">
     <div class="top-bar">
       <h1>Movie Map</h1>
-      <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
+      <div style="margin-left:auto;">
+        <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
+        <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
+      </div>
 
     </div>
     <div id="sidebar-content">
@@ -24,7 +29,8 @@
 
 <style scoped>
 .sidebar {
-  height: 100%
+  height: 100%;
+  position: relative;
 }
 .top-bar {
   display: flex;
@@ -33,7 +39,7 @@
   background: rgb(37, 37, 37);
   left:0;
   height: 65px;
-  width: 100vw;
+  width: 100%;
   padding: 0 20px 0 20px;
 }
 .wrapper {

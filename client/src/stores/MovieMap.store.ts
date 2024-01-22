@@ -1,10 +1,11 @@
 import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
-import placeholder from "../../public/images/placeholder-still.jpeg"
+import placeholder from "@/assets/placeholder-still.jpeg"
 import { useRouter } from 'vue-router';
 import { type Location } from "@/types/moviegeo.types";
 import { type apiStatus } from "@/types/types"
 
+export type FilmDetails = {id: string; [propName: string]: any;}
 
 
 export const useMovieMapStore = defineStore('moviemap', () => {
@@ -16,7 +17,6 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     const movieFetchingStatus = ref<apiStatus>('unattempted')
     const locFetchingStatus = ref<apiStatus>('unattempted')
 
-    type FilmDetails = {id: string; [propName: string]: any;}
     const filmDetails = ref<FilmDetails>()
 
     const locations = ref<{[propName: number]: Location}>({})
