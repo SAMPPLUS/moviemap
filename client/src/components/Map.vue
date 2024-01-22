@@ -69,7 +69,7 @@ import MovieCard from "./Util/MovieCard.vue";
     if(!map.value) return
     if(Object.keys(movieMapStore.locations).length < 1) return
     map.value.leafletObject.flyToBounds(
-      (Object.values(movieMapStore.locations) as { lat: number, lng: number }[]).map(i => [i.lat,i.lng]), {duration: 1}) 
+      (Object.values(movieMapStore.locations) as { lat: number, lng: number }[]).map(i => [i.lat,i.lng]), {duration: 1, padding: [10,10]}) 
   }
 
   const ZoomToLoc = (l : {lat: number, lng : number}) => {

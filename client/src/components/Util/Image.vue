@@ -8,7 +8,7 @@
         src: String,
         caption: String,
         expandable: Boolean,
-        external: Boolean
+        external: Boolean,
         })
         console.log(props)
 
@@ -32,6 +32,7 @@
 
 <template>
     <img v-if="props.src" :src="src" :class="{ expandable : props.expandable}" @click="openImageModal" @error="imageLoadError"/>
+    <div v-else></div>
 </template>
 
 <style scoped>

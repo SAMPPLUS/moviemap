@@ -7,13 +7,19 @@ import {authCheck} from './auth'
 const MovieDetails = () => import('@/components/Sidebar/MovieContent/MovieDetails/MovieDetails.vue')
 const EditLocations = () => import('@/components/Sidebar/MovieContent/EditLocations/EditLocations.vue')
 const LocationDetails = () => import('@/components/Sidebar/MovieContent/MovieDetails/LocationDetails.vue')
+const List = () => import('@/components/Sidebar/Explore/List.vue')
 
 
 
 const routes : RouteRecordRaw[]= [
     {
         path: '/',
-        redirect: {name: 'movieInfo', params: { movie_id: '19' }}
+        redirect: {name: 'explore'}
+    },
+    {
+        path: '/explore',
+        component: List,
+        name: 'explore'
     },
     {
         path: '/movie/:movie_id(\\d+)',

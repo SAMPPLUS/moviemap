@@ -11,6 +11,8 @@ const upload = multer({ dest: 'public/images/uploads' })
 
 var movieGeoRouter = express.Router();
 
+movieGeoRouter.get('/movies', moviegeoCtrl.movies)
+
 movieGeoRouter.post('/minsert', moviegeoCtrl.addMovie);
 
 movieGeoRouter.get('/mget', checkAuth, moviegeoCtrl.movieGet);
@@ -24,6 +26,8 @@ movieGeoRouter.post('/lupdate', validate(schema.lUpdateSchema), moviegeoCtrl.upd
 movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet)
 
 movieGeoRouter.get('/limgget', moviegeoCtrl.locationImagesGet)
+
+movieGeoRouter.get('lrandom', moviegeoCtrl.locationsRandom)
 
 //movieGeoRouter.get('/')
 
