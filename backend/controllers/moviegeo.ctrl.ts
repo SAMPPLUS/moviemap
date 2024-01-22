@@ -158,15 +158,16 @@ const imgUpload = async (req: Request, res : Response) => {
 
 const locationsRandom = async (req : Request, res: Response) => {
     var count : number = 0;
-    if((!req.params.count)){
-        count = 5;
-    }
-    count = Number(req.params.count);
+    console.log(req.query)
+    count = Number(req.query.count);
+    if(!count) count = 5;
     count = Math.min(count, 30);
+
 
     moviegeoDb.getRandomLocations(count).then((data) => {
         res.status(200).json(data)
     }).catch((e: Error)=> {
+        console.log(e)
         res.status(500).json({message: 'unable to fetch locations'})
     })
 

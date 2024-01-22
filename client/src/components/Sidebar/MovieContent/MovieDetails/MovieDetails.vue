@@ -49,6 +49,8 @@
 .frame {
     border: 1px solid white;
     height: fit-content;
+    display: flex;
+    border-radius: 3px;
 }
 
 .poster {

@@ -175,7 +175,9 @@ const insertImage = async (fileName : string) => {
 }
 
 const getRandomLocations = async (count : number) => {
-    return sql`SELECT * FROM locations
+    return sql`
+    SELECT m.title as movie_title, m.poster_path, l.* FROM locations l
+    inner join movies m on l.movie_id=m.id
     ORDER BY random()
     LIMIT ${count};`
 }

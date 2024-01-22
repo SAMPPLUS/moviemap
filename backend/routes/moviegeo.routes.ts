@@ -27,7 +27,7 @@ movieGeoRouter.get('/mlocget', moviegeoCtrl.movieLocationsGet)
 
 movieGeoRouter.get('/limgget', moviegeoCtrl.locationImagesGet)
 
-movieGeoRouter.get('lrandom', moviegeoCtrl.locationsRandom)
+movieGeoRouter.get('/lrandom', moviegeoCtrl.locationsRandom)
 
 //movieGeoRouter.get('/')
 
