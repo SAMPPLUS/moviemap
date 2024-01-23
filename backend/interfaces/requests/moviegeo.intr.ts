@@ -15,8 +15,9 @@ export interface locationReq {
     type: 1 | 2;
   })[];
   location: {
-    g_streetview_embed_url?: string;
+    g_streetview_embed_url?: string | null | '';
     location_desc: string;
+    location_name: string;
     movie_id: number;
     position: {
       lat: number;
@@ -40,9 +41,10 @@ export interface updlocationReq {
     type?: 1 | 2;
   })[];
   location: {
-    g_streetview_embed_url?: string;
+    g_streetview_embed_url?: string | null | '';
     id: number;
     location_desc?: string;
+    location_name?: string;
     position?: {
       lat: number;
       lng: number;
