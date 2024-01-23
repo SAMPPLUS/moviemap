@@ -2,10 +2,12 @@
 import ExploreCard from './ExploreCard.vue';
 import movieGeoService from '@/api/movieGeoService';
 import { ref } from 'vue';
+import { useMovieMapStore } from '@/stores/MovieMap.store';
 import router from '@/routes';
 
 const movie_list = ref<any[]>([])
-
+const movieMapStore = useMovieMapStore()
+movieMapStore.mode = 'home';
 movieGeoService.fetchMovieList().then((data) => {
     console.log(data)
     movie_list.value = data.data
