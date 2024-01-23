@@ -209,7 +209,7 @@ import MovieCard from "./Util/MovieCard.vue";
         </l-control>
       </l-map>
     </div>
-    <div class="overlay" v-if="movieMapStore.filmDetails">
+    <div class="overlay" v-if="movieMapStore.filmDetails" v-show="false">
         <MovieCard :film-details="movieMapStore.filmDetails"/>
     </div>
   </div>

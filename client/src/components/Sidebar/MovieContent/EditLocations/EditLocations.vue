@@ -42,7 +42,9 @@ import { parse } from 'path';
             position: new L.LatLng(target.lat, target.lng),
             title: target.title,
             scene_desc: target.scene_desc,
-            location_desc: target.location_desc
+            location_name: target.location_name,
+            location_desc: target.location_desc,
+            g_streetview_embed_url: target.g_streetview_embed_url
         }
         editStore.locOriginalVals = target;
         editStore.modifyingLocation = editData
@@ -152,11 +154,24 @@ import { parse } from 'path';
 <template>
     <div class="sidebar-comp" >
         <div id="location-form">
-            <h1>New Location</h1>
+            <h1>Edit Location</h1>
             <div class="edit-row">
                 <div>
-                    <label for="title">Title</label>
+                    <label for="title">Scene Title</label>
                     <input type="text" name="title" v-model="editStore.modifyingLocation.title" placeholder="title" :disabled="waiting">
+                </div>
+            </div>
+            <div class="edit-row">
+                <div>
+                    <label for="scene-description">Scene Description</label>
+                    <textarea name="scene-description" v-model="editStore.modifyingLocation.scene_desc" spellcheck="true" placeholder="Scene Description" :disabled="waiting"></textarea>
+                </div>
+            </div>
+            <hr>
+            <div class="edit-row">
+                <div>
+                    <label for="loc-name">Location Name</label>
+                    <input type="text" name="loc-name" v-model="editStore.modifyingLocation.location_name" placeholder="Name" :disabled="waiting">
                 </div>
             </div>
             <div class="edit-row" id="latlng-row" >
@@ -179,12 +194,6 @@ import { parse } from 'path';
             </div>
             <div class="edit-row">
                 <div>
-                    <label for="scene-description">Scene Description</label>
-                    <textarea name="scene-description" v-model="editStore.modifyingLocation.scene_desc" spellcheck="true" placeholder="Scene Description" :disabled="waiting"></textarea>
-                </div>
-            </div>
-            <div class="edit-row">
-                <div>
                     <label for="location-description">Location Description</label>
                     <textarea name="location-description" v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
                 </div>
@@ -192,7 +201,7 @@ import { parse } from 'path';
             <div class="edit-row">
                 <div>
                     <label for="streetview-url">Google Steetview Embed URL</label>
-                    <input name="streetview-url" type="text" placeholder="URL" spellcheck="false"/>
+                    <input name="streetview-url" v-model="editStore.modifyingLocation.g_streetview_embed_url" type="text" placeholder="URL" spellcheck="false"/>
                 </div> 
             </div>
             <h2>Scene Images</h2>

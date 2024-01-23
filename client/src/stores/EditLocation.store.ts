@@ -17,7 +17,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
     const saveStatus = ref<apiStatus>('unattempted')
     const waiting = ref<boolean>(true)
     const locOriginalVals = ref<Location>()
-    const modifyingLocation = ref<locFormData>({ position: new L.LatLng(44.45,-20.56), title: '', scene_desc: '', location_desc:'' })
+    const modifyingLocation = ref<locFormData>({ position: new L.LatLng(44.45,-20.56), title: '', location_name: '', scene_desc: '', location_desc:'' })
 
     
     const sceneImages = ref<imageObject[]>([])
@@ -53,7 +53,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
       if(!MMStore.filmDetails) return;
       var locData = modifyingLocation.value
       console.log(sceneImages.value.filter((img) => Boolean(img.id)).concat(locationImages.value.filter((img) => Boolean(img.id))))
-
+      console.log(locData)
       return moviegeo_axios.post('/api/moviegeo/lupdate', {
         location: locData,
         images: sceneImages.value.filter((img) => Boolean(img.id)).concat(locationImages.value.filter((img) => Boolean(img.id)))

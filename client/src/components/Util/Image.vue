@@ -3,35 +3,49 @@
     import { ref, watch } from 'vue';
     import PictureModal from '../Modal/inner/PictureModal.vue';
     import { IMG_PATH } from '@/util/const';
+    import pp from '@/assets/poster-placeholder.png'
     const modal = useModalStore();
     const props  = defineProps({
         src: String,
         caption: String,
         expandable: Boolean,
         external: Boolean,
+        poster: Boolean
         })
-        console.log(props)
 
-    const src = ref<string | undefined>(props.external ? props.src : IMG_PATH + props.src)
+    const src = ref<string | undefined>(props.src)
+    if(!props.external){
+        src.value = IMG_PATH + props.src
+    }
 
     watch(props, async (oldProps, newProps) => {
         src.value = (props.external ? props.src : IMG_PATH + props.src)
     })
+
     const openImageModal = () => {
-        if(!src || !props.expandable) return
+        if((!src.value) || !props.expandable) return
         modal.openModal({component: PictureModal, props: { src : src.value, caption: props.caption}})
     }
 
-    const imageLoadError = () => {
+    const imageLoadError = (e: Event) => {
+        console.log(e)
         console.log("image load error!")
     }
 
-    
+    const imageLoadSuccess = () => {
+        console.log("image load success!")
+    }
+
+    const placeholder = ref<string>("")
+    if(props.poster){
+        placeholder.value = pp
+    }
+
 
 </script>
 
 <template>
-    <img v-if="props.src" :src="src" :class="{ expandable : props.expandable}" @click="openImageModal" @error="imageLoadError"/>
+    <img v-if="props.src || placeholder" :src="src || placeholder" :class="{ expandable : props.expandable}" @click="openImageModal" @error="imageLoadError" @load="imageLoadSuccess"/>
     <div v-else></div>
 </template>
 

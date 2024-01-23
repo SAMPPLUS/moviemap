@@ -5,6 +5,7 @@ const modal = useModalStore();
 
 const src = ref<string>(modal.props.src)
 if(!src.value){
+    console.log(src.value)
     modal.closeModal()
 }
 
@@ -15,7 +16,7 @@ const caption = ref<string>(modal.props?.caption)
 
 <template>
     <div class="outer-modal">
-    <div class="modal">
+    <div class="inner-modal">
         <div class="container">
             <div id="picture">
                 <img v-if="src" :src="src"/>
@@ -32,11 +33,10 @@ const caption = ref<string>(modal.props?.caption)
 <style scoped>
 .outer-modal {
     background-color: rgb(235, 235, 235);
-    padding: 18px;
+    padding: 9px;
     border-radius: 5px;
 }
-.modal {
-    height: 82vh;
+.inner-modal {
     width: fit-content ;
 }
 .container {
@@ -58,8 +58,8 @@ const caption = ref<string>(modal.props?.caption)
 }
 
 img {
-    max-height: 100%;
-    max-width: 100%;
+    max-height: 82vh;
+    max-width: 80vw;
     object-fit: contain;
 }
 </style>
