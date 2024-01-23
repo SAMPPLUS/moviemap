@@ -27,6 +27,7 @@ import { parse } from 'path';
     const {waiting} = storeToRefs(editStore)
     const parser = new XMLParser();
 
+    const hide_address = ref<boolean>(false)
 
     const changed = computed<boolean>(() => {
         return true
@@ -44,7 +45,13 @@ import { parse } from 'path';
             scene_desc: target.scene_desc,
             location_name: target.location_name,
             location_desc: target.location_desc,
-            g_streetview_embed_url: target.g_streetview_embed_url
+            g_streetview_embed_url: target.g_streetview_embed_url,
+            street: target?.street,
+            city: target?.city,
+            region: target?.region,
+            country: target?.country,
+            zip: target?.zip,
+            specificity: target.specificity
         }
         editStore.locOriginalVals = target;
         editStore.modifyingLocation = editData
@@ -114,8 +121,25 @@ import { parse } from 'path';
         NomReverseGeocode(editStore.wrappedNewLocation.lat, editStore.wrappedNewLocation.lng)
         .then((response : AxiosResponse) => {
             if(response.status != 200) return
-            var obj= parser.parse(response.data)
-            console.log(obj)
+            const data = response.data
+            if(data.features){
+                var parts = data.features[0].properties.geocoding
+                console.log(parts)
+                console.log(parts.label)
+                const street_part_order =['housenumber', 'street', 'locality', 'district']
+                var street = ""
+                street_part_order.forEach((part) => {
+                    if(parts[part]) street += parts[part] + ', '
+                })
+                if(street.length>=2 && street[street.length-2] == ',')  street = street.slice(0, street.length-2)
+
+                editStore.modifyingLocation.street = street
+                editStore.modifyingLocation.location_name = parts.name
+                editStore.modifyingLocation.city = parts.city
+                editStore.modifyingLocation.zip = parts.postcode
+                editStore.modifyingLocation.region = parts.state
+                editStore.modifyingLocation.country = parts.country_code.toUpperCase()
+            }
         })
         .catch((error : Error) => {
             console.log(error)
@@ -168,12 +192,7 @@ import { parse } from 'path';
                 </div>
             </div>
             <hr>
-            <div class="edit-row">
-                <div>
-                    <label for="loc-name">Location Name</label>
-                    <input type="text" name="loc-name" v-model="editStore.modifyingLocation.location_name" placeholder="Name" :disabled="waiting">
-                </div>
-            </div>
+            
             <div class="edit-row" id="latlng-row" >
                 <div>
                     <label for="latitude">Latitude</label>
@@ -194,8 +213,49 @@ import { parse } from 'path';
             </div>
             <div class="edit-row">
                 <div>
+                    <label for="loc-name">Location Name</label>
+                    <input type="text" name="loc-name" v-model="editStore.modifyingLocation.location_name" placeholder="Name" :disabled="waiting">
+                </div>
+                <div class="hide-div"></div>
+            </div>
+            <div class="edit-row" style="justify-content: flex-end; padding-bottom: 0;">
+                <label for="show-address" style="font-size: .8rem;" >hide address details  </label>
+                <div class="hide-div">
+                    <input name="show-address" style="margin-bottom: 4px" type="checkbox"  v-model="hide_address" :disabled="waiting">
+                </div>
+            </div>
+            <div class="edit-row">
+                <div>
+                    <textarea rows="2" style="resize: vertical;" v-model="editStore.modifyingLocation.street" placeholder="Street" :disabled="waiting || hide_address"></textarea>
+                </div>
+                <div class="hide-div">
+                    <input name="show-address" type="checkbox" value="true" :disabled="waiting">
+                </div>
+            </div>
+            <div class="edit-row">
+                <div>
+                    <input placeholder="City" v-model="editStore.modifyingLocation.city" :disabled="waiting || hide_address"> 
+                </div>
+                <div>
+                    <input placeholder="Region/State" v-model="editStore.modifyingLocation.region" :disabled="waiting || hide_address">
+                </div>
+                <div class="hide-div">
+                    <input name="show-address" type="checkbox" value="true" :disabled="waiting">
+                </div>
+            </div>
+            <div class="edit-row">
+                <div>
+                    <input placeholder="Country" v-model="editStore.modifyingLocation.country" :disabled="waiting || hide_address">
+                </div>
+                <div>
+                    <input placeholder="Postal Code" v-model="editStore.modifyingLocation.zip" :disabled="waiting || hide_address">
+                </div>
+                <div class="hide-div"></div>
+            </div>
+            <div class="edit-row">
+                <div>
                     <label for="location-description">Location Description</label>
-                    <textarea name="location-description" v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
+                    <textarea class="desc"  name="location-description" v-model="editStore.modifyingLocation.location_desc" spellcheck="true" placeholder="Location Description" :disabled="waiting"></textarea>
                 </div>
             </div>
             <div class="edit-row">
@@ -225,6 +285,8 @@ import { parse } from 'path';
 
 <style scoped>
 
+textarea { resize: vertical;}
+
 #location-form {
     padding: 0 30px 0 30px;
 }
@@ -233,7 +295,7 @@ import { parse } from 'path';
     font-size: 18px;
 }
 
-#location-form  textarea{
+.desc {
     font-size: 18px;
     width: 100%;
     height: 8em;
@@ -244,6 +306,8 @@ import { parse } from 'path';
     width: 8em;
     margin-right: 1em;
 }
+
+label { line-height: 1.25;}
 
 .edit-row {
     padding-bottom: 18px;
@@ -258,7 +322,11 @@ import { parse } from 'path';
     width:100%;
 }
 
-
+.hide-div {
+    width:50px !important;
+    min-width: 50px;
+    padding-bottom: 5px;
+}
 .add-row{
     text-align: right;
 }
@@ -268,4 +336,4 @@ import { parse } from 'path';
     height: fit-content;
     margin-right: 3px;
 }
-</style>@/stores/EditLocation.store
+</style>

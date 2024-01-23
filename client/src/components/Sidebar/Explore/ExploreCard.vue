@@ -36,7 +36,6 @@ const props = defineProps({
     display: flex;
     flex-direction: row;
     height: 140px;
-    border-bottom: 1px solid black;
     cursor: pointer;
 }
 

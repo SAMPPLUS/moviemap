@@ -14,7 +14,7 @@
 <template>
   <div class="sidebar">
     <div class="top-bar">
-      <h1>Movie Map</h1>
+      <h1 id="site-title"><span style="">Cine</span><span style="">Map</span></h1>
       <div style="margin-left:auto;">
         <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
         <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
@@ -28,6 +28,13 @@
 </template>
 
 <style scoped>
+#site-title {
+  font-family: fifties;
+  font-size: 3rem;
+  font-weight: unset;
+  line-height: 1;
+  color: white;
+}
 .sidebar {
   height: 100%;
   position: relative;

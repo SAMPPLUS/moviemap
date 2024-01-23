@@ -23,10 +23,9 @@ const navigateToMovie =(id: number) => {
     <div class="movie-list">
         <div></div>
         <div class="list-outer">
-            <div>
-                <ExploreCard v-for="item in movie_list" :movie_data="item" @click="navigateToMovie(item.id)"/>
-                
-
+            <div v-for="item in movie_list">
+                <ExploreCard :movie_data="item" @click="navigateToMovie(item.id)"/>
+                <hr class="divider">
             </div>
         </div>
     </div>
@@ -37,4 +36,8 @@ const navigateToMovie =(id: number) => {
     width: 100%;
     padding: 18px;
 }
+
+.divider {
+}
+
 </style>

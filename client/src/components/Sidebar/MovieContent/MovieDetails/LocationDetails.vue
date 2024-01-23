@@ -1,6 +1,4 @@
 <script setup lang="ts">
-console.log('running locationDetails setup script')
-
 import { watch, ref } from 'vue';
 import { useMovieMapStore } from '@/stores/MovieMap.store'
 import type { apiStatus } from '@/types/types';
@@ -15,7 +13,6 @@ import Image from '@/components/Util/Image.vue';
 
 const router = useRouter()
 const route = useRoute()
-console.log(route.params)
 const movieMapStore = useMovieMapStore()
 const {locFetchingStatus} = storeToRefs(movieMapStore)
 const awaitingFetch = ref<boolean>(false)

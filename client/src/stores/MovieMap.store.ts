@@ -23,7 +23,7 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     
     const selectedLocationIdx = ref<number | undefined>(undefined)
 
-    type ModeOption = "movie" | "loc" | "edit";
+    type ModeOption = "home" | "movie" | "loc" | "edit";
     const mode = ref<ModeOption>("movie")
 
     const placeholderStill = ref<string>(placeholder)
