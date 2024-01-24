@@ -46,7 +46,9 @@ const insertMovie = async (vals : movieInsValues) => {
 
 
 type position = {lat: number, lng: number}
-interface locValues { movie_id: number; title: string; position: position; scene_desc: string; location_name: string, location_desc: string, main_img_path?: string, id?: number, g_streetview_embed_url?: string | null };
+interface locValues { movie_id: number; title: string; position: position; scene_desc: string; location_name: string;
+    location_desc: string; main_img_path?: string; id?: number, g_streetview_embed_url?: string | null;
+    street?: string; city?: string, region?: string; zip?: string; country?: string; specificity: string};
 type updLocValues = Partial<locValues> & {id: number}
 interface imageValues {id: number; description: string; type: number; location_id?: number; status?: 'new'|'update'}
 type updImageValues = Partial<imageValues> & {id: number}
@@ -57,7 +59,13 @@ const insertLocation = async (locVals: locValues, imgVals : imageValues[]) => {
         title: locVals.title,
         scene_desc: locVals.scene_desc,
         location_desc: locVals.location_desc,
-        geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`
+        geo: `POINT(${locVals.position.lng} ${locVals.position.lat})`,
+        street: locVals.street,
+        city: locVals.city,
+        region: locVals.region,
+        zip: locVals.zip,
+        country: locVals.country,
+        specificity: locVals.specificity
     };
     if(locVals.g_streetview_embed_url){
         locIns.g_streetview_embed_url = locVals.g_streetview_embed_url
@@ -104,6 +112,12 @@ const updateLocation = async (locVals: updLocValues, imgVals : updImageValues[])
         scene_desc: locVals.scene_desc,
         location_name: locVals.location_name,
         location_desc: locVals.location_desc,
+        street: locVals.street,
+        city: locVals.city,
+        region: locVals.region,
+        zip: locVals.zip,
+        country: locVals.country,
+        specificity: locVals.specificity
     }; 
 
     if (locVals.position){

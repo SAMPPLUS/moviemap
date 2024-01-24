@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { watch, ref } from 'vue';
+import { watch, ref, computed } from 'vue';
 import { useMovieMapStore } from '@/stores/MovieMap.store'
 import type { apiStatus } from '@/types/types';
 import { useRoute, useRouter } from 'vue-router';
@@ -18,6 +18,24 @@ const {locFetchingStatus} = storeToRefs(movieMapStore)
 const awaitingFetch = ref<boolean>(false)
 movieMapStore.mode = 'loc'
 const modal = useModalStore()
+
+
+
+
+const specificity_values = {
+        'street': 0,
+        'city': 1,
+        'region': 2,
+        'country': 3,
+        'hide': 4
+    }
+
+const showAddressPart = (spec_val : number) => {
+    if(!movieMapStore.selectedLocation) return false
+    return (specificity_values[movieMapStore.selectedLocation.specificity as keyof typeof specificity_values]<=spec_val)
+}
+
+const atleastOneAddressPart = computed<boolean>(() => {return (Boolean(movieMapStore.selectedLocation) && (Boolean(movieMapStore.selectedLocation?.country))) })
 
 const setLocById = (id : number) =>{
     if(!(id in movieMapStore.locations)){
@@ -63,14 +81,15 @@ watch(() => route.params.loc_id, (loc_id ) => {
                  expandable/>
             </div>
             
-            <h2>{{ movieMapStore.selectedLocation?.title }}</h2>
+            <h3 style="color: rgb(196, 196, 196)">{{ movieMapStore.selectedLocation?.title }}</h3>
             <hr>
             <p class="location-info blog">{{ movieMapStore.selectedLocation?.scene_desc }}</p>   
         </div>
         <div>
-            <h2>Where was it filmed?</h2>
-            <hr style="margin-right: 34%">
+            <h4 style="font-weight: 500; color: rgb(124, 124, 124);">Where was it filmed?</h4>
+            <hr style="margin-right: 14%">
             <div class="location section">
+                
                 <div class="main-img-container" id="">
 
                     <Image class="main-img"
@@ -78,9 +97,25 @@ watch(() => route.params.loc_id, (loc_id ) => {
                      :caption="movieMapStore.selectedLocation?.loc_img_desc"
                      expandable/>
                 </div>
-                <p class="blog">{{ movieMapStore.selectedLocation?.location_desc }}</p>
+                <div class="loc-details">
+                    <div id="address" v-show="atleastOneAddressPart">
+                        <h2 >{{ movieMapStore.selectedLocation?.location_name }}</h2>
+                        <div class="address-parts">
+                            <div v-if="showAddressPart(0) && movieMapStore.selectedLocation?.street ">
+                                {{ movieMapStore.selectedLocation.street }}, <br>
+                            </div>
+                            <div>
+                                <span v-if="showAddressPart(1) && movieMapStore.selectedLocation?.city"> {{ movieMapStore.selectedLocation.city }}, </span>
+                                <span v-if="showAddressPart(2) && movieMapStore.selectedLocation?.region"> {{ movieMapStore.selectedLocation.region }}, </span>
+                                <span v-if="showAddressPart(3) && movieMapStore.selectedLocation?.country"> {{ movieMapStore.selectedLocation.country }} </span>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                    <p class="blog">{{ movieMapStore.selectedLocation?.location_desc }}</p>
                 <GoogleStreetViewEmbed v-if="false" url="https://www.google.com/maps/embed?pb=!4v1705017146462!6m8!1m7!1sFmYUSEP8-OyuqwHCBA8_Ig!2m2!1d34.04107625525651!2d-118.2314945060246!3f339.1876516681286!4f-12.61778220327082!5f0.7820865974627469"></GoogleStreetViewEmbed>  
 
+                </div>
             </div>
 
         </div>
@@ -99,14 +134,15 @@ watch(() => route.params.loc_id, (loc_id ) => {
     .main-img-container {
         overflow: hidden;
         max-width: 50%;
-        margin:10px;
     }
     
     .scene  .main-img-container {
         float: left;
+        margin: 2px 14px 10px 0;
     }
     .location  .main-img-container  {
         float: right;
+        margin: 6px 0 10px 14px
     }
 
 
@@ -117,12 +153,24 @@ watch(() => route.params.loc_id, (loc_id ) => {
         cursor: pointer;
     }
 
+    #address {
+        margin: 12px 0;
+        line-height: 1.15;
+
+    }
+
+    .address-parts {
+        margin: 0 16px 0 0 ;
+        font-size: .9rem;
+        color: rgb(159, 159, 159);
+
+    }
     .scene  .main-img {
-        max-height: 30vh;
+        max-height: 31vh;
     }
 
     .location  .main-img {
-        max-height: 35vh;
+        max-height: 36vh;
     }
 
     .location-info {

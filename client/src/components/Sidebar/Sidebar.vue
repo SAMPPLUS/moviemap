@@ -14,7 +14,12 @@
 <template>
   <div class="sidebar">
     <div class="top-bar">
-      <h1 id="site-title"><span style="">Cine</span><span style="">Map</span></h1>
+      <div id="title-container">
+
+      <a href="/">
+        <h1 id="site-title"><span style="">Cine</span><span style="">Map</span></h1>
+      </a>
+      </div>
       <div style="margin-left:auto;">
         <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
         <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
@@ -28,12 +33,24 @@
 </template>
 
 <style scoped>
+#title-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  
+}
+
 #site-title {
-  font-family: fifties;
+  margin: 0;
+  font-family: newake;
   font-size: 3rem;
   font-weight: unset;
-  line-height: 1;
   color: white;
+  cursor: pointer;
+  background-image: linear-gradient(45deg, #9c1252, #fff900);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
 .sidebar {
   height: 100%;

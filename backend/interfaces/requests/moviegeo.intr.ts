@@ -15,6 +15,8 @@ export interface locationReq {
     type: 1 | 2;
   })[];
   location: {
+    city?: string;
+    country?: string;
     g_streetview_embed_url?: string | null | '';
     location_desc: string;
     location_name: string;
@@ -23,8 +25,12 @@ export interface locationReq {
       lat: number;
       lng: number;
     };
+    region?: string;
     scene_desc: string;
+    specificity: string;
+    street?: string;
     title: string;
+    zip?: string;
   };
 }
 
@@ -41,6 +47,8 @@ export interface updlocationReq {
     type?: 1 | 2;
   })[];
   location: {
+    city?: string;
+    country?: string;
     g_streetview_embed_url?: string | null | '';
     id: number;
     location_desc?: string;
@@ -49,7 +57,11 @@ export interface updlocationReq {
       lat: number;
       lng: number;
     };
+    region?: string;
     scene_desc?: string;
+    specificity?: string;
+    street?: string;
     title?: string;
+    zip?: string;
   };
 }

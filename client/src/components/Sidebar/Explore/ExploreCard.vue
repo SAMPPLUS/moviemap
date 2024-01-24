@@ -17,8 +17,15 @@ const props = defineProps({
     <div class="movie-info">
         <h3 id="title">{{movie_data.title}}</h3>
         <div id="year">
-            {{ movie_data.release_date ? movie_data.release_date.substring(0,4) : '' }}
+            <div>
+                {{ movie_data.release_date ? movie_data.release_date.substring(0,4) : '' }}
+            </div>
+            <div>
+                {{ movie_data.director }}
+            </div>
+            <div></div>
         </div>
+
     </div>
     <div class="loc-info">
         <div id="loc-count">
@@ -66,6 +73,10 @@ const props = defineProps({
 }
 
 #year {
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-between;
     font-size: .8rem;
 }
 

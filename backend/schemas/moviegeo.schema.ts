@@ -12,7 +12,13 @@ export const lInsertSchema = joi.object({
             lat: joi.number().min(-90).max(90).required(),
             lng: joi.number().min(-180).max(180).required()
         }).required(),
-        g_streetview_embed_url: joi.string().allow(null, '')
+        g_streetview_embed_url: joi.string().allow(null, ''),
+        street: joi.string(),
+        city: joi.string(),
+        region: joi.string(),
+        zip: joi.string(),
+        country: joi.string(),
+        specificity: joi.string().required().valid('hide','street', 'city', 'region', 'country')
     }).required(),
     images: joi.array().items(joi.object({
         id: joi.number().required(),
@@ -34,7 +40,13 @@ export const lUpdateSchema = joi.object({
             lat: joi.number().min(-90).max(90).required(),
             lng: joi.number().min(-180).max(180).required()
         }),
-        g_streetview_embed_url: joi.string().allow(null, '')
+        g_streetview_embed_url: joi.string().allow(null, ''),
+        street: joi.string(),
+        city: joi.string(),
+        region: joi.string(),
+        zip: joi.string(),
+        country: joi.string(),
+        specificity: joi.string()
     }).required(),
     images: joi.array().items(joi.object({
         id: joi.number().required(),

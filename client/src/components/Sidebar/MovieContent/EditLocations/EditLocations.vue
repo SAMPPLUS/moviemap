@@ -4,7 +4,7 @@
     import { useEditLocationStore } from '@/stores/EditLocation.store'
     import {type imageObject } from "@/interfaces/edit.int"
 
-    import { ref, onBeforeMount, watch, computed} from 'vue'
+    import { ref, onBeforeMount, watch, computed, readonly} from 'vue'
     import { useRoute } from 'vue-router'
     import { storeToRefs } from 'pinia'
     import {type locFormData} from "@/types/moviegeo.types"
@@ -15,8 +15,8 @@
     import {XMLParser, } from 'fast-xml-parser';
 
     import { NomReverseGeocode } from '@/api/geocode'
-import type { AxiosResponse } from 'axios'
-import { parse } from 'path';
+    import type { AxiosResponse } from 'axios'
+    import { parse } from 'path';
 
     const movieMapStore = useMovieMapStore()
     const editStore = useEditLocationStore()
@@ -33,6 +33,17 @@ import { parse } from 'path';
         return true
     })
 
+    const specificity_values = {
+        'street': 0,
+        'city': 1,
+        'region': 2,
+        'country': 3,
+        'hide': 4
+    }
+
+    const toShowAddressPart = (spec_val: number) => {
+        return (specificity_values[editStore.modifyingLocation.specificity as keyof typeof specificity_values]>=spec_val)
+    }
     
     const setEditLocation = (id : number) => {
         if(!(id in movieMapStore.locations)) return
@@ -218,39 +229,52 @@ import { parse } from 'path';
                 </div>
                 <div class="hide-div"></div>
             </div>
-            <div class="edit-row" style="justify-content: flex-end; padding-bottom: 0;">
-                <label for="show-address" style="font-size: .8rem;" >hide address details  </label>
-                <div class="hide-div">
-                    <input name="show-address" style="margin-bottom: 4px" type="checkbox"  v-model="hide_address" :disabled="waiting">
+            <div>
+                Specificity
+            </div>
+            <div class="edit-row specificity" >
+                <div>
+                    <label for="to-street">to street</label>
+                    <input id="to-street" type="radio" name="specificity" v-model="editStore.modifyingLocation.specificity" :value="'street'">
+                </div>
+                <div>
+                    <label for="to-city">to city</label>
+                    <input id="to-city" type="radio" name="specificity" v-model="editStore.modifyingLocation.specificity" :value="'city'">
+                </div>
+                <div>
+                    <label for="to-region">to region</label>
+                    <input id="to-region" type="radio" name="specificity" v-model="editStore.modifyingLocation.specificity" :value="'region'">
+                </div>
+                <div>
+                    <label for="to-country">to country</label>
+                    <input id="to-country" type="radio" name="specificity" v-model="editStore.modifyingLocation.specificity" :value="'country'">
+                </div>
+                <div>
+                    <label for="hide-all">hide all</label>
+                    <input id="hide-all" type="radio" name="specificity" v-model="editStore.modifyingLocation.specificity" :value="'hide'">
                 </div>
             </div>
             <div class="edit-row">
                 <div>
-                    <textarea rows="2" style="resize: vertical;" v-model="editStore.modifyingLocation.street" placeholder="Street" :disabled="waiting || hide_address"></textarea>
-                </div>
-                <div class="hide-div">
-                    <input name="show-address" type="checkbox" value="true" :disabled="waiting">
+                    <textarea placeholder="Street"  rows="2" style="resize: vertical;" v-model="editStore.modifyingLocation.street" :class="{'address-hiding': toShowAddressPart(1)}"  :disabled="waiting"></textarea>
                 </div>
             </div>
             <div class="edit-row">
                 <div>
-                    <input placeholder="City" v-model="editStore.modifyingLocation.city" :disabled="waiting || hide_address"> 
+                    <input placeholder="City" v-model="editStore.modifyingLocation.city" :class="{'address-hiding': toShowAddressPart(2)}" :disabled="waiting"> 
                 </div>
                 <div>
-                    <input placeholder="Region/State" v-model="editStore.modifyingLocation.region" :disabled="waiting || hide_address">
+                    <input placeholder="Region/State" v-model="editStore.modifyingLocation.region" :class="{'address-hiding': toShowAddressPart(3)}" :disabled="waiting">
                 </div>
-                <div class="hide-div">
-                    <input name="show-address" type="checkbox" value="true" :disabled="waiting">
-                </div>
+                
             </div>
             <div class="edit-row">
                 <div>
-                    <input placeholder="Country" v-model="editStore.modifyingLocation.country" :disabled="waiting || hide_address">
+                    <input placeholder="Country" v-model="editStore.modifyingLocation.country" :class="{'address-hiding': toShowAddressPart(4)}" :disabled="waiting">
                 </div>
                 <div>
-                    <input placeholder="Postal Code" v-model="editStore.modifyingLocation.zip" :disabled="waiting || hide_address">
+                    <input placeholder="Postal Code" v-model="editStore.modifyingLocation.zip" :class="{'address-hiding': toShowAddressPart(1)}" :disabled="waiting || hide_address">
                 </div>
-                <div class="hide-div"></div>
             </div>
             <div class="edit-row">
                 <div>
@@ -294,7 +318,10 @@ textarea { resize: vertical;}
 #location-form input {
     font-size: 18px;
 }
-
+.specificity {
+    font-size: .8rem;
+    text-align: center;
+}
 .desc {
     font-size: 18px;
     width: 100%;
@@ -335,5 +362,9 @@ label { line-height: 1.25;}
     width: fit-content;
     height: fit-content;
     margin-right: 3px;
+}
+
+.address-hiding {
+    background-color: rgb(205, 205, 205);
 }
 </style>
