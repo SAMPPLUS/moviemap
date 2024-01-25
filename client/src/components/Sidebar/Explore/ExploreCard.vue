@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import Image from '@/components/Util/Image.vue';
-
+import { useRouter } from 'vue-router';
+import { ref, computed} from 'vue';
+import { propsBinder } from '@vue-leaflet/vue-leaflet/dist/src/utils';
+const router = useRouter();
 const props = defineProps({
     movie_data : {
         type: Object,
@@ -8,9 +11,22 @@ const props = defineProps({
     }
 })
 
+const ctrlClick = (e: Event) => {
+    console.log('ctrl click')
+}
+const navigateToMovie =(e : Event) => {
+    e.preventDefault()
+    router.push({name:'movieInfo', params: {movie_id: props.movie_data.id }})
+}
+
+const href = ref<string>('')
+
+href.value = router.resolve({name:'movieInfo', params: {movie_id: props.movie_data.id }}).href
+
+
 </script>
 <template>
-<div class="ex-card">
+<a class="ex-card" :href="href" @click.exact="navigateToMovie" >
     <div class="pic-container">
         <Image class="img" :src="movie_data.poster_path" poster external/>
     </div>
@@ -34,7 +50,7 @@ const props = defineProps({
         </div>
         
     </div>
-</div>
+</a>
 
 </template>
 
@@ -44,10 +60,10 @@ const props = defineProps({
     flex-direction: row;
     height: 140px;
     cursor: pointer;
+    color: white;
 }
 
 .ex-card:hover {
-    background-color: rgb(78, 78, 78);
 }
 
 .pic-container {

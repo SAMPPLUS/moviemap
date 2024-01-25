@@ -68,5 +68,9 @@ export const useMovieMapStore = defineStore('moviemap', () => {
         }
     }
 
+    const unsetSelected = () => {
+        
+    }
+
     return {locFetchingStatus, movieFetchingStatus, filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation,  setMode, setSelectedLocationId}
 })

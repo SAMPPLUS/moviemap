@@ -16,9 +16,6 @@ movieGeoService.fetchMovieList().then((data) => {
     console.log(e);
 })
 
-const navigateToMovie =(id: number) => {
-    router.push({name:'movieInfo', params: {movie_id: id }})
-}
 
 </script>
 
@@ -27,7 +24,7 @@ const navigateToMovie =(id: number) => {
         <div></div>
         <div class="list-outer">
             <div v-for="item in movie_list">
-                <ExploreCard :movie_data="item" @click="navigateToMovie(item.id)"/>
+                <ExploreCard :movie_data="item" />
                 <hr class="divider">
             </div>
         </div>
