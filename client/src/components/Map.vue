@@ -77,7 +77,7 @@
 
   const ZoomToLoc = (l : {lat: number, lng : number}) => {
     if(!map.value || !isMapReady.value) return
-    map.value.leafletObject.setView([l.lat, l.lng], 13, {animate: true})
+    map.value.leafletObject.setView([l.lat, l.lng], 15, {animate: true})
   }
 
   const clickLocationMarker = (id : number) => {
@@ -139,7 +139,7 @@
             if(args[0] != undefined){
               var l = movieMapStore.locations[args[0]]
               if(isMapReady.value && map.value){
-                map.value.leafletObject.setView([l.lat, l.lng], 13, {animate: true})
+                map.value.leafletObject.setView([l.lat, l.lng], 15, {animate: true})
               }
               else{
                 //mapQueuedAction.value = {func: 'setView', params: [l]}
