@@ -82,13 +82,13 @@ watch(() => route.params.loc_id, (loc_id ) => {
                  expandable/>
             </div>
             
-            <h3 style="color: rgb(196, 196, 196)">{{ movieMapStore.selectedLocation?.title }}</h3>
+            <h2 style="margin-bottom: 1px;">{{ movieMapStore.selectedLocation?.title }}</h2>
             <hr style="margin-bottom: 8px">
             <p class="location-info blog">{{ movieMapStore.selectedLocation?.scene_desc }}</p>   
         </div>
         <div>
             <div style="margin-bottom: 8px;">
-                    <h4 style="font-weight: 500; color: rgb(177, 177, 177); ">Where was it filmed?</h4>
+                    <h3 style="font-weight: 500;  margin-bottom: 1px;">Where was it filmed?</h3>
                 <hr >
             </div>
             <div class="location section">
@@ -116,7 +116,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
                                 {{ Math.trunc(movieMapStore.selectedLocation.lng * 100000) / 100000 }}
                             </div>
                         </div>
-                        <h2 >{{ movieMapStore.selectedLocation?.location_name }}</h2>
+                        <h2 style="font-size: 2rem;">{{ movieMapStore.selectedLocation?.location_name }}</h2>
                         <div class="address-parts">
                             <div v-if="showAddressPart(0) && movieMapStore.selectedLocation?.street ">
                                 {{ movieMapStore.selectedLocation.street }}, <br>
@@ -176,6 +176,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
     #address {
         margin: 2px 0 12px 0 ;
         line-height: 1.15;
+        font-family: cushion;
 
     }
 
@@ -205,7 +206,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
     }
 
     .location-info {
-        min-height: 5rem;
+        min-height: 5.5rem;
     }
 
 

@@ -18,11 +18,31 @@
 }
 
 @font-face {
-  font-family: 'fifties';
-  src: url('../fonts/fifties_movies/Fifties-Movies.ttf')
+  font-family: 'newake';
+  src: url('../fonts/newake/NewakeFont-Demo.otf')
 }
 
 @font-face {
-  font-family: 'newake';
-  src: url('../fonts/newake/NewakeFont-Demo.otf')
+  font-family: 'apple';
+  src: url('../fonts/apple_garamond/AppleGaramond.ttf')
+}
+
+@font-face {
+  font-family: 'apple-light';
+  src: url('../fonts/apple_garamond/AppleGaramond-Light.ttf');
+}
+
+@font-face {
+  font-family: 'softers';
+  src: url('../fonts/softers/Softers.otf');
+}
+
+@font-face {
+  font-family: 'cushion';
+  src: url('../fonts/lt_cushion/LTCushion-Medium.ttf');
+}
+
+@font-face {
+  font-family: 'cushion-bold';
+  src: url('../fonts/lt_cushion/LTCushion-Black.ttf');
 }

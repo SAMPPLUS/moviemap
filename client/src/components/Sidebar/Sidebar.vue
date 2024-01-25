@@ -35,7 +35,7 @@
         </a>
         <div id="title-container">
           <a href="/"  @click="clickLogo">
-            <h1 id="site-title"><span style="">Scene </span><span style="">Geo</span></h1>
+            <h1 id="site-title"><span style="">Scene</span><span style="">Geo</span></h1>
           </a>
         </div>
         <!--
@@ -84,12 +84,23 @@
 
 #site-title {
   margin: 0;
-  font-family: newake;
-  font-size: 3rem;
+  font-family: 'cushion-bold';
+  font-weight: 700;
+  font-size: 3.4rem;
   font-weight: unset;
   color: white;
   cursor: pointer;
-  
+  background-image: linear-gradient(45deg, #f3ec78, #af4261);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+#site-title:hover {
+  background-image: linear-gradient(45deg, #f3ec78, #af4261);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  opacity: .8;
+  transition: 0.2s;
 }
 .sidebar {
   height: 100%;
