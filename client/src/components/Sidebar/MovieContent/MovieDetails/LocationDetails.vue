@@ -82,12 +82,14 @@ watch(() => route.params.loc_id, (loc_id ) => {
             </div>
             
             <h3 style="color: rgb(196, 196, 196)">{{ movieMapStore.selectedLocation?.title }}</h3>
-            <hr>
+            <hr style="margin-bottom: 8px">
             <p class="location-info blog">{{ movieMapStore.selectedLocation?.scene_desc }}</p>   
         </div>
         <div>
-            <h4 style="font-weight: 500; color: rgb(124, 124, 124);">Where was it filmed?</h4>
-            <hr style="margin-right: 14%">
+            <div style="margin-bottom: 8px;">
+                    <h4 style="font-weight: 500; color: rgb(177, 177, 177); ">Where was it filmed?</h4>
+                <hr >
+            </div>
             <div class="location section">
                 
                 <div class="main-img-container" id="">
@@ -97,7 +99,10 @@ watch(() => route.params.loc_id, (loc_id ) => {
                      :caption="movieMapStore.selectedLocation?.loc_img_desc"
                      expandable/>
                 </div>
+                
+                
                 <div class="loc-details">
+                    
                     <div id="address" v-show="atleastOneAddressPart">
                         <h2 >{{ movieMapStore.selectedLocation?.location_name }}</h2>
                         <div class="address-parts">
@@ -113,10 +118,16 @@ watch(() => route.params.loc_id, (loc_id ) => {
                         <hr>
                     </div>
                     <p class="blog">{{ movieMapStore.selectedLocation?.location_desc }}</p>
-                <GoogleStreetViewEmbed v-if="false" url="https://www.google.com/maps/embed?pb=!4v1705017146462!6m8!1m7!1sFmYUSEP8-OyuqwHCBA8_Ig!2m2!1d34.04107625525651!2d-118.2314945060246!3f339.1876516681286!4f-12.61778220327082!5f0.7820865974627469"></GoogleStreetViewEmbed>  
 
                 </div>
+                
             </div>
+            <div style="margin-bottom: 22px;">
+                <h4 style="font-weight: 500; color: rgb(177, 177, 177); ">Street View</h4>
+                <hr>
+            </div>
+            <GoogleStreetViewEmbed style="margin-top: 4px;" v-if="movieMapStore.selectedLocation?.g_streetview_embed_url" :url="movieMapStore.selectedLocation?.g_streetview_embed_url"></GoogleStreetViewEmbed>  
+
 
         </div>
     </div>
@@ -136,14 +147,11 @@ watch(() => route.params.loc_id, (loc_id ) => {
         max-width: 50%;
     }
     
-    .scene  .main-img-container {
+    .main-img-container {
         float: left;
         margin: 2px 14px 10px 0;
     }
-    .location  .main-img-container  {
-        float: right;
-        margin: 6px 0 10px 14px
-    }
+   
 
 
     .main-img {
@@ -154,7 +162,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
     }
 
     #address {
-        margin: 12px 0;
+        margin: 12px 0 ;
         line-height: 1.15;
 
     }
@@ -163,7 +171,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
         margin: 0 16px 0 0 ;
         font-size: .9rem;
         color: rgb(159, 159, 159);
-
+        margin-bottom: 15px;
     }
     .scene  .main-img {
         max-height: 31vh;
@@ -176,4 +184,6 @@ watch(() => route.params.loc_id, (loc_id ) => {
     .location-info {
         min-height: 5rem;
     }
+
+
 </style>

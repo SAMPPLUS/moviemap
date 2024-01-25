@@ -14,7 +14,6 @@ const props = defineProps({url: String})
 
 <style>
 .streetview-container {
-    padding: 18px;
 }
 
 .h_iframe iframe {
@@ -22,8 +21,10 @@ const props = defineProps({url: String})
     height:100%;
 }
 .h_iframe {
-    height: 500px;
+    height: 400px;
     width:100%;
-    padding: 0 25px 0 25px;
+    padding-right: 12%;
+    padding-left: 12%;
+
 }
 </style>

@@ -5,26 +5,36 @@
   import { useCurrentUser } from 'vuefire';
   import { useModalStore } from '@/stores/Modal.store';
   import LoginModal from '../Modal/inner/LoginModal.vue';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
   const user = useCurrentUser();
   const modal = useModalStore();
 
+  const clickLogo = (e: Event) => {
+    e.preventDefault()
+    router.push({name: 'explore'})
+  }
   
 </script>
 
 <template>
   <div class="sidebar">
     <div class="top-bar">
-      <div id="title-container">
+      <div class="top-bar-inner">
+        <div id="title-container">
 
-      <a href="/">
-        <h1 id="site-title"><span style="">Cine</span><span style="">Map</span></h1>
-      </a>
-      </div>
-      <div style="margin-left:auto;">
-        <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
-        <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
-      </div>
-
+          <a href="/" @click="clickLogo">
+            <h1 id="site-title"><span style="">Scene </span><span style="">Geo</span></h1>
+          </a>
+        </div>
+        <!--
+        <div style="margin-left:auto;">
+          <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
+          <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
+        </div>
+        -->
+    </div>
     </div>
     <div id="sidebar-content">
       <router-view/>
@@ -38,7 +48,12 @@
   flex-direction: column;
   justify-content: center;
   height: 100%;
-  
+  position:absolute;
+  left:0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
 }
 
 #site-title {
@@ -48,23 +63,27 @@
   font-weight: unset;
   color: white;
   cursor: pointer;
-  background-image: linear-gradient(45deg, #9c1252, #fff900);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  
 }
 .sidebar {
   height: 100%;
   position: relative;
 }
 .top-bar {
-  display: flex;
-  flex-direction: row;
+  
   position: absolute;
   background: rgb(37, 37, 37);
   left:0;
   height: 65px;
   width: 100%;
-  padding: 0 20px 0 20px;
+}
+
+.top-bar-inner {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  position: relative;
 }
 .wrapper {
   padding: 20px;

@@ -9,7 +9,8 @@
   import { type Location } from "@/types/moviegeo.types";
   import { IMG_PATH } from "@/util/const";
   import Image from "./Util/Image.vue";
-import MovieCard from "./Util/MovieCard.vue";
+  import MovieCard from "./Util/MovieCard.vue";
+  import { useCurrentUser } from "vuefire";
 
   const props  = defineProps({
   startzoom: Number
@@ -17,6 +18,8 @@ import MovieCard from "./Util/MovieCard.vue";
 
   const center : Ref<PointExpression> = ref([32.842, -37.089])
   const map = ref<typeof LMap>()
+  const user = useCurrentUser();
+
 
   type mapActionType = ('zoomtobounds' | 'zoomtoloc')
   interface mapQueuedAction {type: mapActionType; params? : any[]}
@@ -209,23 +212,43 @@ import MovieCard from "./Util/MovieCard.vue";
         </l-control>
       </l-map>
     </div>
-    <div class="overlay" v-if="movieMapStore.filmDetails" v-show="false">
+    <div class="overlay" id="overlay-nowshowing" v-if="movieMapStore.filmDetails" v-show="false">
         <MovieCard :film-details="movieMapStore.filmDetails"/>
+    </div>
+    <div v-if="user" class="overlay" id="overlay-adminlogin">
+      <div>Logged In</div>
+      <div>
+        {{user.providerData[0].displayName}}
+      </div>
     </div>
   </div>
 </template> 
 <style scoped>
 
-
 .overlay {
-  width: 400px;
   position: absolute;
+  z-index: 2;
+
+}
+
+#overlay-nowshowing {
+  width: 400px;
   left: 0;
 
   top: 0;
   margin: 0 auto;
-  z-index: 2;
   pointer-events: auto;
+}
+
+#overlay-adminlogin {
+  width: 100px;
+  right: 0;
+  top: 0;
+  margin: 0 auto;
+  pointer-events: auto;
+  background-color: rgba(0, 0, 0, 0.199);
+  font-size: .8rem;
+  text-align: center;
 }
 .map-control {
   border: 2px solid rgb(164, 164, 164);
@@ -239,6 +262,8 @@ import MovieCard from "./Util/MovieCard.vue";
   padding:  1px;
   cursor: pointer;
 }
+
+
 
 .map-control-btn:hover {
   background-color: rgb(245, 245, 245);

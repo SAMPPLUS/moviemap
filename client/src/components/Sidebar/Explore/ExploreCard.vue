@@ -12,7 +12,7 @@ const props = defineProps({
 <template>
 <div class="ex-card">
     <div class="pic-container">
-        <Image class="img" :src="movie_data.poster_path" external/>
+        <Image class="img" :src="movie_data.poster_path" poster external/>
     </div>
     <div class="movie-info">
         <h3 id="title">{{movie_data.title}}</h3>
