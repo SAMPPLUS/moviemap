@@ -17,7 +17,7 @@ export const useEditLocationStore = defineStore('editlocations', () => {
     const saveStatus = ref<apiStatus>('unattempted')
     const waiting = ref<boolean>(true)
     const locOriginalVals = ref<Location>()
-    const modifyingLocation = ref<locFormData>({ position: new L.LatLng(44.45,-20.56), title: '', location_name: '', scene_desc: '', location_desc:'' })
+    const modifyingLocation = ref<locFormData>({ position: new L.LatLng(44.45,-20.56), title: '', location_name: '', scene_desc: '', location_desc:'', specificity: 'hide' })
 
     
     const sceneImages = ref<imageObject[]>([])

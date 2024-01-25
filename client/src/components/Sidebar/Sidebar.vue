@@ -6,14 +6,22 @@
   import { useModalStore } from '@/stores/Modal.store';
   import LoginModal from '../Modal/inner/LoginModal.vue';
   import { useRouter } from 'vue-router';
+  import SceneSelector from './MovieContent/MovieDetails/SceneSelector.vue';
 
   const router = useRouter();
+  const movieMapStore = useMovieMapStore();
   const user = useCurrentUser();
   const modal = useModalStore();
 
   const clickLogo = (e: Event) => {
     e.preventDefault()
     router.push({name: 'explore'})
+  }
+
+  const clickBack = (e: Event) => {
+    e.preventDefault()
+    if(movieMapStore.mode == 'loc') router.push({name: 'movieInfo'})
+    else if (movieMapStore.mode == 'movie') router.push({name: 'explore'})
   }
   
 </script>
@@ -22,9 +30,11 @@
   <div class="sidebar">
     <div class="top-bar">
       <div class="top-bar-inner">
+        <a id="topback" href="#" v-if="['loc','movie'].includes(movieMapStore.mode)" @click="clickBack">
+          <img src="@/assets/icons/chevron-left.svg"/>
+        </a>
         <div id="title-container">
-
-          <a href="/" @click="clickLogo">
+          <a href="/"  @click="clickLogo">
             <h1 id="site-title"><span style="">Scene </span><span style="">Geo</span></h1>
           </a>
         </div>
@@ -37,12 +47,24 @@
     </div>
     </div>
     <div id="sidebar-content">
-      <router-view/>
+      <div id="content-container">
+        <router-view/>
+      </div>
+      <SceneSelector></SceneSelector>
     </div>
   </div>
 </template>
 
 <style scoped>
+
+
+#topback {
+  padding-right:6px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
 #title-container {
   display: flex;
   flex-direction: column;
@@ -54,6 +76,10 @@
   margin-left: auto;
   margin-right: auto;
   width: fit-content;
+}
+
+#title-container a:hover {
+  background-color: unset;
 }
 
 #site-title {
@@ -76,6 +102,7 @@
   left:0;
   height: 65px;
   width: 100%;
+  z-index: 50;
 }
 
 .top-bar-inner {
@@ -93,7 +120,12 @@
   height: 100vh;
   max-height: 100vh;
   padding: 65px 0px 0 0px;
-  overflow-y: scroll;
+  display: flex;
+  flex-direction: column;
 }
 
+#content-container {
+  flex-grow: 1;
+  overflow-y: scroll;
+}
 </style>

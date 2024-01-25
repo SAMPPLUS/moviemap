@@ -276,6 +276,6 @@
   position: relative;
 }
 .tt-image {
-  max-width: 200px;
+  max-width: 13vw;
 }
 </style>

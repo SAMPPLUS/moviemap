@@ -16,6 +16,7 @@ const route = useRoute()
 const movieMapStore = useMovieMapStore()
 const {locFetchingStatus} = storeToRefs(movieMapStore)
 const awaitingFetch = ref<boolean>(false)
+console.log('setting to loc')
 movieMapStore.mode = 'loc'
 const modal = useModalStore()
 
@@ -104,6 +105,17 @@ watch(() => route.params.loc_id, (loc_id ) => {
                 <div class="loc-details">
                     
                     <div id="address" v-show="atleastOneAddressPart">
+                        <div id="coords" v-if="movieMapStore.selectedLocation?.lat && movieMapStore.selectedLocation?.lng">
+                            <div>
+                                <img src="@/assets/icons/mapmarker.svg"/>
+                            </div>
+                            <div class="coord-part">
+                                {{ Math.trunc(movieMapStore.selectedLocation.lat * 100000) / 100000 }},
+                            </div>
+                            <div class="coord-part" style="margin-left: 11px;">
+                                {{ Math.trunc(movieMapStore.selectedLocation.lng * 100000) / 100000 }}
+                            </div>
+                        </div>
                         <h2 >{{ movieMapStore.selectedLocation?.location_name }}</h2>
                         <div class="address-parts">
                             <div v-if="showAddressPart(0) && movieMapStore.selectedLocation?.street ">
@@ -162,9 +174,20 @@ watch(() => route.params.loc_id, (loc_id ) => {
     }
 
     #address {
-        margin: 12px 0 ;
+        margin: 2px 0 12px 0 ;
         line-height: 1.15;
 
+    }
+
+    #coords {
+        display: flex;
+        flex-direction: row;
+        color: #9f9f9f;
+        align-items: center;
+    }
+
+    #coords .coord-part {
+        margin-left: 5px
     }
 
     .address-parts {

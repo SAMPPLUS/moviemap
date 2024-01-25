@@ -5,7 +5,9 @@ import { useRouter} from 'vue-router';
 import { storeToRefs } from 'pinia';
 import {IMG_PATH} from '../../../../util/const'
 import { type Location } from "@/types/moviegeo.types";
+import { useSceneSelectorStore } from '@/stores/SceneSelector.store';
 
+const selectorStore = useSceneSelectorStore()
 const movieMapStore = useMovieMapStore()
 const router = useRouter()
 
@@ -30,10 +32,7 @@ const cardImageError = (e : Event) => {
 }
 
 const getSceneImgPath = (location : Location) => {
-    if(location.scene_img){
-        return IMG_PATH + location.scene_img
-    }
-    else return (location.main_img_path) || (movieMapStore.placeholderStill)
+    return (location.main_img_path) || (movieMapStore.placeholderStill)
 }
 
 const cardRefs = ref<HTMLDivElement[]>([])
@@ -62,8 +61,8 @@ onMounted(() => {
 </script>
 
 <template>
-<div class="ss-container">
-    <div style="color: white; background-color: black; font-size: 1em; padding-left: 10px;">hello</div>
+<div class="ss-container" v-if="selectorStore.vis=='showing'">
+    <div style="color: white; background-color: black; font-size: 1em; padding-left: 10px;" v-if="false">hello</div>
     <div class="scene-selector">
         <div class="scroller">
             <div class="end" ></div>
@@ -81,7 +80,6 @@ onMounted(() => {
 .ss-container {
     display: flex;
     flex-direction: column;
-
 }
 .scene-selector {
     max-width: 100%;
@@ -111,9 +109,12 @@ onMounted(() => {
 }
 
 .card {
+    border: 1px solid rgba(218, 218, 218, 0.048);
     height: 100%;
     aspect-ratio: 16 / 9;
     margin: 0 1.5% 0 1.5%;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .card:hover {
