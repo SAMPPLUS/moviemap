@@ -12,6 +12,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.39.3",
     "axios": "^1.6.0",
     "buffer": "^6.0.3",
     "fast-xml-parser": "^4.3.3",

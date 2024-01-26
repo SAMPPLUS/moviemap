@@ -2,7 +2,6 @@
 import Image from '@/components/Util/Image.vue';
 import { useRouter } from 'vue-router';
 import { ref, computed} from 'vue';
-import { propsBinder } from '@vue-leaflet/vue-leaflet/dist/src/utils';
 const router = useRouter();
 const props = defineProps({
     movie_data : {

@@ -9,7 +9,9 @@ import movieGeoRouter from './routes/moviegeo.routes';
 import TmdbRouter from './routes/tmdb.routes';
 import admin, { type ServiceAccount } from 'firebase-admin';
 import {serviceAccount} from './admin-keys/movie-map-firebase-admin'
-import { DecodedIdToken } from 'firebase-admin/lib/auth/token-verifier';
+
+import { createClient } from '@supabase/supabase-js'
+
 
 declare global {
   namespace Express {
@@ -23,6 +25,11 @@ export {}
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount as ServiceAccount)
 })
+
+// Create a single supabase client for interacting with your database
+const supabaseUrl = 'https://lvaxlehekdolcbrvugzq.supabase.co'
+const supabaseKey = String(process.env.SUPABASE_KEY)
+const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Initialize the express engine
 const app = express();
