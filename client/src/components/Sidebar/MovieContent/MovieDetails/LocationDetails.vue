@@ -74,7 +74,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
 
 </script>
 <template>
-    <div style="height: 100%; padding: 13px;">
+    <div style="height: 100%; padding: 13px 14px 30px 13px;">
         <div class="scene section">
             <div class="main-img-container" id="scene">
                 <Image class="main-img" :src="movieMapStore.selectedLocation?.scene_img"
@@ -112,7 +112,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
                             <div class="coord-part">
                                 {{ Math.trunc(movieMapStore.selectedLocation.lat * 100000) / 100000 }},
                             </div>
-                            <div class="coord-part" style="margin-left: 11px;">
+                            <div class="coord-part" style="margin-left: 5px;">
                                 {{ Math.trunc(movieMapStore.selectedLocation.lng * 100000) / 100000 }}
                             </div>
                         </div>
@@ -185,6 +185,7 @@ watch(() => route.params.loc_id, (loc_id ) => {
         flex-direction: row;
         color: #9f9f9f;
         align-items: center;
+        font-size: .8rem;
     }
 
     #coords .coord-part {
@@ -201,6 +202,9 @@ watch(() => route.params.loc_id, (loc_id ) => {
         max-height: 31vh;
     }
 
+    .location {
+        margin-bottom: 14px;
+    }
     .location  .main-img {
         max-height: 36vh;
     }

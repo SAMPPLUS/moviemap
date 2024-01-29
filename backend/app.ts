@@ -3,6 +3,7 @@ import express, { Express, Request, Response, Router } from 'express';
 import 'dotenv/config'
 import morgan from 'morgan';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import cron from './scheduled/cron';
 import movieGeoRouter from './routes/moviegeo.routes';
@@ -10,7 +11,8 @@ import TmdbRouter from './routes/tmdb.routes';
 import admin, { type ServiceAccount } from 'firebase-admin';
 import {serviceAccount} from './admin-keys/movie-map-firebase-admin'
 
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from './util/supabase';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 
 declare global {
@@ -29,7 +31,7 @@ admin.initializeApp({
 // Create a single supabase client for interacting with your database
 const supabaseUrl = 'https://lvaxlehekdolcbrvugzq.supabase.co'
 const supabaseKey = String(process.env.SUPABASE_KEY)
-const supabase = createClient(supabaseUrl, supabaseKey)
+//const supabase = createClient(supabaseUrl, supabaseKey)
 
 // Initialize the express engine
 const app = express();
@@ -39,8 +41,17 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({
     extended: true
   }));
+app.use(cookieParser())
 
 const router = Router();
+
+router.use((req: Request, res: Response, next) => {
+  console.log('hellooooo ^_^')
+  const supabase : SupabaseClient= createClient({req, res})
+  res.locals.supabase = supabase;
+  console.log(supabase)
+  next()
+})
 
 
 router.use('/moviegeo', movieGeoRouter);
@@ -49,6 +60,7 @@ router.use('/tmdb', TmdbRouter);
 app.use('/api/', router);
 
 app.use('/api/',express.static('public'))
+
 const port = process.env.PORT;
 
 

@@ -15,7 +15,7 @@ movieGeoRouter.get('/movies', moviegeoCtrl.movies)
 
 movieGeoRouter.post('/minsert', moviegeoCtrl.addMovie);
 
-movieGeoRouter.get('/mget', checkAuth, moviegeoCtrl.movieGet);
+movieGeoRouter.get('/mget', moviegeoCtrl.movieGet);
 
 movieGeoRouter.get('/mgettmdb', moviegeoCtrl.movieGetTMDB);
 

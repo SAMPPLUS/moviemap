@@ -1,6 +1,6 @@
 
 import sql  from './db'
-import { Row } from 'postgres';
+import { Row, Sql } from 'postgres';
 import { locationReq } from '../interfaces/requests';
 
 const getMovies = async () => {

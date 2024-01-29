@@ -4,14 +4,17 @@
   import MovieContent from './MovieContent/MovieContent.vue';
   import { useCurrentUser } from 'vuefire';
   import { useModalStore } from '@/stores/Modal.store';
+  import { useUserStore } from '@/stores/User.store'
   import LoginModal from '../Modal/inner/LoginModal.vue';
   import { useRouter } from 'vue-router';
   import SceneSelector from './MovieContent/MovieDetails/SceneSelector.vue';
-
+  import { storeToRefs } from 'pinia';
   const router = useRouter();
   const movieMapStore = useMovieMapStore();
-  const user = useCurrentUser();
+  const userStore = useUserStore();
   const modal = useModalStore();
+  const {user} = storeToRefs(userStore)
+  userStore.getUser();
 
   const clickLogo = (e: Event) => {
     e.preventDefault()
@@ -22,15 +25,14 @@
     e.preventDefault()
     if(movieMapStore.mode == 'loc') router.push({name: 'movieInfo'})
     else if (movieMapStore.mode == 'movie') router.push({name: 'explore'})
-  }
-  
+  }  
 </script>
 
 <template>
   <div class="sidebar">
     <div class="top-bar">
       <div class="top-bar-inner">
-        <a id="topback" href="#" v-if="['loc','movie'].includes(movieMapStore.mode)" @click="clickBack">
+        <a id="topleft" href="#" v-if="['loc','movie'].includes(movieMapStore.mode)" @click="clickBack">
           <img src="@/assets/icons/chevron-left.svg"/>
         </a>
         <div id="title-container">
@@ -38,6 +40,11 @@
             <h1 id="site-title"><span style="">Scene</span><span style="">Geo</span></h1>
           </a>
         </div>
+        <div id="topright" >
+          <button v-if="user" @click="userStore.signOut"> Sign Out</button>
+          <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
+        </div>
+        
         <!--
         <div style="margin-left:auto;">
           <p v-if="user">Hello {{ user.providerData[0].displayName }}</p>
@@ -58,11 +65,17 @@
 <style scoped>
 
 
-#topback {
-  padding-right:6px;
+#topleft {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+#topright {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin-left:auto
 }
 
 #title-container {
@@ -138,5 +151,6 @@
 #content-container {
   flex-grow: 1;
   overflow-y: scroll;
+  background-color: var(--color-background);
 }
 </style>

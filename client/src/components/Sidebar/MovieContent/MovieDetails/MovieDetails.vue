@@ -34,6 +34,8 @@
             </div>
         </div>     
     </div>
+    <h2 style="margin-left: 12px;"><span style="font-size: 2.1rem; margin-right: .5rem;">{{Object.keys(store.locations).length}}</span>Locations</h2>
+    <hr>
 </div>
 
 </template>
@@ -56,10 +58,13 @@
 
 .poster {
     width: 191px;
+    max-width: 30%;
 }
 
 .details-container {
     padding: 0 0 0 20px;
+    overflow: hidden;
+    margin-bottom: 20px;
 }
 
 .movie-details .movie-header {

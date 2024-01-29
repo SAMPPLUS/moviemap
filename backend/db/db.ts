@@ -1,8 +1,3 @@
-//console.log("db_pw: " , process.env.DB_PW)
-import postgres from "postgres";
-const sql = postgres('http://127.0.0.1:5432/moviemap', {
-    username: process.env.DB_USR,
-    password: process.env.DB_PW
-});
-
+import postgres, { Sql } from "postgres";
+const sql : Sql = postgres(process.env.DB_ADMIN_URL!);
 export default sql;

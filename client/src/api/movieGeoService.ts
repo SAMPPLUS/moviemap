@@ -11,10 +11,12 @@ const fetchMovie = async (id: string) => {
             id: id
         }
     }).then((film) => {
+        console.log(film)
         movieMapStore.filmDetails = film.data[0]
         movieMapStore.movieFetchingStatus = 'success'
 
-    }).catch((error) => {
+    }).catch((error : Error) => {
+        console.log(error)
         movieMapStore.movieFetchingStatus = 'failed'
         return [error]
     })

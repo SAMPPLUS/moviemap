@@ -25,6 +25,5 @@
   flex-direction: column;
   justify-content: flex-start;
   position: relative;
-  margin-bottom: 25px;
 }
 </style>

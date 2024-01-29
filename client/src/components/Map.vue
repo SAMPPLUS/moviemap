@@ -11,6 +11,7 @@
   import Image from "./Util/Image.vue";
   import MovieCard from "./Util/MovieCard.vue";
   import { useCurrentUser } from "vuefire";
+  import { useUserStore } from "@/stores/User.store";
 
   const props  = defineProps({
   startzoom: Number
@@ -18,7 +19,9 @@
 
   const center : Ref<PointExpression> = ref([32.842, -37.089])
   const map = ref<typeof LMap>()
-  const user = useCurrentUser();
+  const userStore = useUserStore();
+
+  const {user} = storeToRefs(userStore)
 
 
   type mapActionType = ('zoomtobounds' | 'zoomtoloc')
@@ -215,10 +218,10 @@
     <div class="overlay" id="overlay-nowshowing" v-if="movieMapStore.filmDetails" v-show="false">
         <MovieCard :film-details="movieMapStore.filmDetails"/>
     </div>
-    <div v-if="user" class="overlay" id="overlay-adminlogin">
+    <div v-if="userStore.user" class="overlay" id="overlay-adminlogin">
       <div>Logged In</div>
       <div>
-        {{user.providerData[0].displayName}}
+        {{userStore.user.email}}
       </div>
     </div>
   </div>
@@ -249,6 +252,7 @@
   background-color: rgba(0, 0, 0, 0.199);
   font-size: .8rem;
   text-align: center;
+  overflow: hidden;
 }
 .map-control {
   border: 2px solid rgb(164, 164, 164);
@@ -274,6 +278,7 @@
   background-color: white;
   z-index: 14;
   position: relative;
+  overflow: hidden;
 }
 .tt-image {
   max-width: 13vw;
