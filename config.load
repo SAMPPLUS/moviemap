@@ -1,5 +1,0 @@
-LOAD DATABASE
-    FROM postgres://sampeterson:poiasd@http://127.0.0.1:5432/moviemap
-    INTO postgres://postgres.lvaxlehekdolcbrvugzq:6LYwsfpZJiJFCJ@aws-0-us-west-1.pooler.supabase.com:6543/postgres
-ALTER SCHEMA 'sampeterson' OWNER TO 'postgres';
-set wal_buffers = '64MB', max_wal_senders = '0', statement_timeout = '0', work_mem to '2GB';
