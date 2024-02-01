@@ -46,7 +46,7 @@ app.use(cookieParser())
 const router = Router();
 
 router.use((req: Request, res: Response, next) => {
-  console.log('hellooooo ^_^')
+  //console.log('hellooooo ^_^')
   const supabase : SupabaseClient= createClient({req, res})
   res.locals.supabase = supabase;
   console.log(supabase)
@@ -66,6 +66,7 @@ const port = process.env.PORT;
 
 //cron jobs
 //testAlert.start();
+cron.testAlertTask.start();
 cron.cleanImagesTask.start();
  
 // Handling '/' Request

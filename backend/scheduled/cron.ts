@@ -11,7 +11,8 @@ const testAlertTask = new CronJob(
 );
 
 const cleanImagesTask = new CronJob(
-	'0 * * * *',
+	'0 * * * *', // on start
+	//'*/1 * * * *', // every minute
 	schedCtrl.cleanImages,
 	null, 
 	false,
