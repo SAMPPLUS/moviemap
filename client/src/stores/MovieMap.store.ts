@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref, computed } from 'vue'
 import placeholder from "@/assets/placeholder-still.jpeg"
 import { useRouter } from 'vue-router';
-import { type Location } from "@/types/moviegeo.types";
+import { type Location, type Locations } from "@/types/moviegeo.types";
 import { type apiStatus } from "@/types/types"
 
 export type FilmDetails = {id: string; [propName: string]: any;}
@@ -19,7 +19,7 @@ export const useMovieMapStore = defineStore('moviemap', () => {
 
     const filmDetails = ref<FilmDetails>()
 
-    const locations = ref<{[propName: number]: Location}>({})
+    const locations = ref<Locations>({})
     
     const selectedLocationIdx = ref<number | undefined>(undefined)
 

@@ -14,7 +14,7 @@
 
 <template>
 <div class="sidebar-comp" id="movie-content">
-    <router-view style="overflow-y: auto; background-color: var(--color-background);" name="mainMovieContent"></router-view>
+    <router-view style=" background-color: var(--color-background);" name="mainMovieContent"></router-view>
 </div>
 
 </template>

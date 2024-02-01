@@ -7,7 +7,8 @@ const props = defineProps({
     movie_data : {
         type: Object,
         required: true
-    }
+    },
+    filter_str: String
 })
 
 const ctrlClick = (e: Event) => {
@@ -18,6 +19,16 @@ const navigateToMovie =(e : Event) => {
     router.push({name:'movieInfo', params: {movie_id: props.movie_data.id }})
 }
 
+const title_lwr = computed<string>(() => { return String(props.movie_data.title).toLowerCase().replace(/\s/g, "")})
+const dir_lwr = computed<string>(() => { return String(props.movie_data.director).toLowerCase().replace(/\s/g, "")})
+
+
+const show = computed(() => {
+    return !props.filter_str || ((title_lwr.value.includes(props.filter_str) || (dir_lwr.value.includes(props.filter_str))))
+})
+
+
+
 const href = ref<string>('')
 
 href.value = router.resolve({name:'movieInfo', params: {movie_id: props.movie_data.id }}).href
@@ -25,32 +36,34 @@ href.value = router.resolve({name:'movieInfo', params: {movie_id: props.movie_da
 
 </script>
 <template>
-<a class="ex-card" :href="href" @click.exact="navigateToMovie" >
-    <div class="pic-container">
-        <Image class="img" :src="movie_data.poster_path" poster external/>
-    </div>
-    <div class="movie-info">
-        <h3 id="title">{{movie_data.title}}</h3>
-        <div id="year">
-            <div>
-                {{ movie_data.release_date ? movie_data.release_date.substring(0,4) : '' }}
-            </div>
-            <div>
-                {{ movie_data.director }}
-            </div>
-            <div></div>
+<div v-show="show">
+    <a class="ex-card" :href="href" @click.exact="navigateToMovie" >
+        <div class="pic-container">
+            <Image class="img" :src="movie_data.poster_path" poster external/>
         </div>
+        <div class="movie-info">
+            <h3 id="title">{{movie_data.title}}</h3>
+            <div id="year">
+                <div>
+                    {{ movie_data.release_date ? movie_data.release_date.substring(0,4) : '' }}
+                </div>
+                <div>
+                    {{ movie_data.director }}
+                </div>
+                <div></div>
+            </div>
 
-    </div>
-    <div class="loc-info">
-        <div id="loc-count">
-            <h4>{{ movie_data.loc_count }}</h4>
-            <span class="small">locations</span>
         </div>
-        
-    </div>
-</a>
-
+        <div class="loc-info">
+            <div id="loc-count">
+                <h4>{{ movie_data.loc_count }}</h4>
+                <span class="small">locations</span>
+            </div>
+            
+        </div>
+    </a>
+    <hr class="divider" >
+</div>
 </template>
 
 <style scoped>

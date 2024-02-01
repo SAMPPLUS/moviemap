@@ -3,6 +3,7 @@
   import { useMovieMapStore } from '@/stores/MovieMap.store'
   import { useModalStore } from '@/stores/Modal.store';
   import Image from '@/components/Util/Image.vue';
+  import LocationList from './LocationList.vue';
   
   const store = useMovieMapStore();
   const modal = useModalStore();
@@ -35,7 +36,8 @@
         </div>     
     </div>
     <h2 style="margin-left: 12px;"><span style="font-size: 2.1rem; margin-right: .5rem;">{{Object.keys(store.locations).length}}</span>Locations</h2>
-    <hr>
+    <hr style="margin-bottom: 4px;">
+    <LocationList :locations="store.locations"/>
 </div>
 
 </template>

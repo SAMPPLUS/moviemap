@@ -80,7 +80,7 @@
 
   const ZoomToLoc = (l : {lat: number, lng : number}) => {
     if(!map.value || !isMapReady.value) return
-    map.value.leafletObject.setView([l.lat, l.lng], 15, {animate: true})
+    map.value.leafletObject.setView([l.lat, l.lng], 15, {animate: true, duration: 1})
   }
 
   const clickLocationMarker = (id : number) => {

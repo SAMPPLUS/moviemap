@@ -33,7 +33,6 @@
     }
 
     const imageLoadSuccess = () => {
-        console.log("image load success!")
     }
 
     const placeholder = ref<string>("")
