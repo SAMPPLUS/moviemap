@@ -153,4 +153,18 @@
   overflow-y: scroll;
   background-color: var(--color-background);
 }
+
+
+#content-container::-webkit-scrollbar {
+  width: 12px;               /* width of the entire scrollbar */
+}
+
+#content-container::-webkit-scrollbar-track {
+  background: var(--color-background)       /* color of the tracking area */
+}
+
+#content-container::-webkit-scrollbar-thumb {
+  background-color: rgb(109, 109, 109);    /* color of the scroll thumb */
+  border-radius: 20px;       /* roundness of the scroll thumb */
+}
 </style>
