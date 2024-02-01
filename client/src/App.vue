@@ -3,6 +3,7 @@
 import Sidebar from './components/Sidebar/Sidebar.vue'
 import Map from './components/Map.vue';
 import Modal from './components/Modal/Modal.vue'
+import Toast from './components/Toast.vue';
 import { useRoute } from 'vue-router';
 import { useMovieMapStore } from './stores/MovieMap.store';
 import { onMounted } from 'vue';
@@ -37,6 +38,7 @@ const modalStore = useModalStore()
     <Map :startzoom="3" ></Map>
   </div>
   <Modal/>
+  <Toast/>
 </template>
 
 

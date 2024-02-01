@@ -48,6 +48,7 @@ const clickOption = (e: Event, id : number) => {
 .loc-card-details .img-container {
     padding: 8px;
     height: 100%;
+    aspect-ratio: 16/9;
 }
 
 .loc-card-details .name {

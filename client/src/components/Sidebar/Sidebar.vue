@@ -6,14 +6,19 @@
   import { useModalStore } from '@/stores/Modal.store';
   import { useUserStore } from '@/stores/User.store'
   import LoginModal from '../Modal/inner/LoginModal.vue';
+  import { useToastStore } from '@/stores/Toast.store';
   import { useRouter } from 'vue-router';
   import SceneSelector from './MovieContent/MovieDetails/SceneSelector.vue';
   import { storeToRefs } from 'pinia';
+  import getOS from '@/util/getOs';
+
   const router = useRouter();
   const movieMapStore = useMovieMapStore();
   const userStore = useUserStore();
   const modal = useModalStore();
+  const toast = useToastStore();
   const {user} = storeToRefs(userStore)
+  const os = ref<string|null>(getOS())
   userStore.getUser();
 
   const clickLogo = (e: Event) => {
@@ -26,6 +31,11 @@
     if(movieMapStore.mode == 'loc') router.push({name: 'movieInfo'})
     else if (movieMapStore.mode == 'movie') router.push({name: 'explore'})
   }  
+
+  const showTestToast = () => {
+    toast.openToast({text: 'this is a toast that is a bit longer. More text to display. Lorem Ipsum more text more text. extrabagant', duration: 1.2, type: 'warning'})
+  }
+
 </script>
 
 <template>
@@ -41,6 +51,7 @@
           </a>
         </div>
         <div id="topright" >
+          <button @click="showTestToast">toast</button>
           <button v-if="user" @click="userStore.signOut"> Sign Out</button>
           <button v-else @click="modal.openModal({component: LoginModal})"> login </button>
         </div>
@@ -54,7 +65,7 @@
     </div>
     </div>
     <div id="sidebar-content">
-      <div id="content-container">
+      <div id="content-container" :class="{'windows-scrollbar': os=='windows'}">
         <router-view/>
       </div>
       <SceneSelector></SceneSelector>
@@ -155,16 +166,16 @@
 }
 
 
-#content-container::-webkit-scrollbar {
-  width: 12px;               /* width of the entire scrollbar */
+.windows-scrollbar::-webkit-scrollbar {
+  width: 10px;               /* width of the entire scrollbar */
 }
 
-#content-container::-webkit-scrollbar-track {
+.windows-scrollbar::-webkit-scrollbar-track {
   background: var(--color-background)       /* color of the tracking area */
 }
 
-#content-container::-webkit-scrollbar-thumb {
+.windows-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgb(109, 109, 109);    /* color of the scroll thumb */
-  border-radius: 20px;       /* roundness of the scroll thumb */
+  border-radius: 12px;       /* roundness of the scroll thumb */
 }
 </style>
