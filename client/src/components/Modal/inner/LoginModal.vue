@@ -1,65 +1,82 @@
+
+
 <script lang="ts">
     import { GoogleAuthProvider } from 'firebase/auth'
     export const googleAuthProvider = new GoogleAuthProvider()
 </script>
 
 <script setup lang="ts">
-    import {
-    signInWithPopup,
-    signOut,
-    } from 'firebase/auth'
-    import firebaseui from 'firebaseui';
-    import { useFirestore, useFirebaseAuth, useCurrentUser } from 'vuefire';
+
     import { supabase } from '@/main'
     import { ref } from 'vue';
     import { useModalStore } from '@/stores/Modal.store';
     import { useUserStore } from '@/stores/User.store';
-    //var ui = new firebaseui.auth.AuthUI(firebase.auth());
 
     const modal = useModalStore()
-    const auth = useFirebaseAuth()!
     const userStore = useUserStore()
 
     const email = ref<string>('')
     const pw = ref<string>('')
+    const loading = ref<boolean>(false)
+    const errorMessage = ref<string | null>(null)
+    
     const mode = ref<'register'|'login'>('login')
+
     if(['register','login'].includes(modal.props.mode)) {
         mode.value = modal.props.mode;
     }
 
-    function signinPopup() {
-        //error.value = null
-        signInWithPopup(auth, googleAuthProvider).catch((reason) => {
-            console.error('Failed sign', reason)
-            //error.value = reason
-        })
-    }
 
-    const signUpNewUser = async() => {
+    const signUpNewUser = async () => {
+        // Reset error and start loading state
+        errorMessage.value = null;
+        loading.value = true;
+
+
+
         const { data, error } = await supabase.auth.signUp({
             email: email.value,
             password: pw.value,
             options: {
-            emailRedirectTo: 'http://localhost:5173/'
-                }
-            })
-        console.log(data, error)
+                emailRedirectTo: 'http://localhost:5173/'
+            }
+        });
+
+        if (error) {
+            errorMessage.value = `Sign-up failed: ${error.message}`;
+            console.log(error); 
+        } else {
+            errorMessage.value = null;
+            console.log("User registered successfully!", data);
+            modal.closeModal();
+        }
+
+        loading.value = false; 
     }
 
-    const signInWithEmail = async() =>{
+    const signInWithEmail = async () => {
+        
+        errorMessage.value = null;
+        loading.value = true;
+
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email.value,
             password: pw.value
-        })
-        console.log(data, error)
-        userStore.getUser()
+        });
+
+        if (error) {
+            errorMessage.value = `Login failed: ${error.message}`;
+            console.log(error);
+        } else {
+            errorMessage.value = null;
+            userStore.getUser(); 
+            console.log("User signed in successfully!", data);
+            modal.closeModal();
+        }
+
+        loading.value = false;
     }
 
-    function supabaseGoogleSignin() {
-        supabase.auth.signInWithOAuth({
-            provider: 'google',
-        })
-    }
 
 
 </script>
@@ -98,6 +115,7 @@
                 <div>
                     <a href="#" @click="mode=(mode=='login' ? 'register' : 'login')">Register</a>
                 </div>
+                <div id="error-msg">{{ errorMessage }}</div>
             </div>
         </div>
         
@@ -119,6 +137,12 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+}
+
+
+#error-msg {
+    color: red;
+    font-size: .7em;
 }
 
 .login-forms {

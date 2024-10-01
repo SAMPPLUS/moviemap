@@ -23,6 +23,8 @@ export const useMovieMapStore = defineStore('moviemap', () => {
     
     const selectedLocationIdx = ref<number | undefined>(undefined)
 
+    const hoveredLocation = ref<number | undefined>(undefined)
+
     type ModeOption = "home" | "movie" | "loc" | "edit";
     const mode = ref<ModeOption>("movie")
 
@@ -72,5 +74,5 @@ export const useMovieMapStore = defineStore('moviemap', () => {
         
     }
 
-    return {locFetchingStatus, movieFetchingStatus, filmDetails, locations, selectedLocationIdx, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation,  setMode, setSelectedLocationId}
+    return {locFetchingStatus, movieFetchingStatus, filmDetails, locations, selectedLocationIdx, hoveredLocation, mode, placeholderStill, releaseYear, movieLocationMisatch, selectedLocation,  setMode, setSelectedLocationId}
 })

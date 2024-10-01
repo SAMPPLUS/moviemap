@@ -6,27 +6,53 @@ import {type User} from '@supabase/supabase-js'
 
 export const useUserStore = defineStore('auth', () => {
     const user = ref<User|null>(null)
+    const loading = ref<boolean>(false)
+    const error = ref<string | null>(null)
 
     const getUser = async () => {
-        var new_user : User|null = null
-        if(!user.value){
-            var  {data, error} = await supabase.auth.getUser()
-            console.log(data)
-            if(error){
-                console.log(error)
+        
+        loading.value = true;
+        error.value = null;
+
+        try {
+            if (!user.value) {
+                const { data, error: fetchError } = await supabase.auth.getUser();
+
+                if (fetchError) {
+                    error.value = `Error retrieving user: ${fetchError.message}`;
+                    console.log(error.value);
+                    return null;
+                }
+
+                user.value = data.user;
             }
-            if(data.user){
-                new_user = data.user
-            }
+
+        } catch (err) {
+            error.value = `Unexpected error: ${err}`;
+            console.log(error.value);
+
+        } finally {
+            loading.value = false;
         }
-        user.value = new_user
-        return user.value
+
+        return user.value;
     }
 
     const signOut = async () => {
-        await supabase.auth.signOut()
-        getUser()
+        try {
+            const { error } = await supabase.auth.signOut();
+            
+            if (error) {
+                console.log('Error signing out:', error);
+                return;
+            }
+    
+            user.value = null;
+    
+        } catch (err) {
+            console.log('Unexpected error during sign out:', err);
+        }
     }
 
-    return {user, getUser, signOut}
+    return {user, loading, error, getUser, signOut}
 })
